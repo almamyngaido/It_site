@@ -1,0 +1,97 @@
+.c-custom {
+    position: relative;
+    height: max-content;
+    width: fit-content;
+
+}
+
+courousel-item.img {
+    height: 500px;
+}
+
+
+.carousel-caption {
+    top: 25%;
+    font-size: 100%;
+    color: rgb(254, 255, 255);
+}
+
+.carousel-caption h1 {
+    margin-bottom: 10px;
+    font-weight: bolder;
+}
+
+.carousel-caption a {
+    margin-top: 45px;
+}
+
+#qualite {
+    margin-top: 25px;
+}
+
+section h1 {
+    text-align: center;
+    text-decoration-color: black;
+    color: rgb(0, 0, 0);
+}
+
+hr {
+    position: relative;
+    color: rgba(28, 7, 164, 0.859);
+    background-color: rgb(54, 60, 60);
+    height: 5px;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f5f5f5;
+}
+
+header {
+    background-color: #333;
+    color: #fff;
+    padding: 20px;
+    text-align: center;
+}
+
+nav {
+    background-color: #666;
+    padding: 10px;
+    text-align: center;
+}
+
+nav a {
+    color: #fff;
+    text-decoration: none;
+    padding: 10px 20px;
+    margin: 0 10px;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+nav a:hover {
+    background-color: #555;
+}
+
+section h1,
+h2 {
+    padding: 20px;
+    text-align: center;
+}
+
+h2 {
+    color: #333;
+}
+
+p {
+    color: #666;
+}
+
+footer {
+    background-color: #333;
+    color: #fff;
+    padding: 10px;
+    text-align: center;
+}
