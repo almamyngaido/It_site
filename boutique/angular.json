@@ -22,13 +22,21 @@
             "tsConfig": "tsconfig.app.json",
             "assets": [
               "src/favicon.ico",
+              "src/favicon.svg",
+              "src/favicon-96x96.png",
+              "src/apple-touch-icon.png",
+              "src/site.webmanifest",
+              "src/web-app-manifest-192x192.png",
+              "src/web-app-manifest-512x512.png",
               "src/assets"
             ],
             "styles": [
               "src/custom-theme.scss",
               "src/styles.css",
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
-              "node_modules/bootstrap-icons/font/bootstrap-icons.css"
+              "node_modules/bootstrap-icons/font/bootstrap-icons.css",
+              "node_modules/ngx-toastr/toastr.css",
+              "node_modules/sweetalert2/dist/sweetalert2.min.css"
             ],
             "scripts": ["node_modules/bootstrap/dist/js/bootstrap.bundle.js"]
           },
@@ -42,8 +50,8 @@
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "2kb",
-                  "maximumError": "4kb"
+                  "maximumWarning": "10kb",
+                  "maximumError": "20kb"
                 }
               ],
               "outputHashing": "all"
@@ -72,7 +80,8 @@
               "browserTarget": "boutique:build:production"
             },
             "development": {
-              "browserTarget": "boutique:build:development"
+              "browserTarget": "boutique:build:development",
+              "proxyConfig": "proxy.conf.json"
             }
           },
           "defaultConfiguration": "development"
@@ -103,5 +112,8 @@
         }
       }
     }
+  },
+  "cli": {
+    "analytics": false
   }
 }

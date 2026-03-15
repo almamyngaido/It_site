@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ng generate service:*)",
+      "Bash(mkdir:*)",
+      "Bash(ng generate:*)"
+    ]
+  }
+}

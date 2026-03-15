@@ -1,0 +1,578 @@
+/* Services Hero Section */
+.services-hero {
+    background: linear-gradient(135deg, #1e3a5f 0%, #2d5a7b 50%, #4a7c9f 100%);
+    padding: 120px 0 80px;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="1"/></pattern></defs><rect width="100%" height="100%" fill="url(%23grid)"/></svg>');
+    opacity: 0.3;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.hero-title {
+    font-size: 3.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    margin-bottom: 1.5rem;
+    animation: fadeInUp 0.8s ease-out;
+}
+
+.hero-subtitle {
+    font-size: 1.25rem;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 3rem;
+    line-height: 1.8;
+    animation: fadeInUp 0.8s ease-out 0.2s backwards;
+}
+
+.hero-features {
+    display: flex;
+    justify-content: center;
+    gap: 3rem;
+    flex-wrap: wrap;
+    animation: fadeInUp 0.8s ease-out 0.4s backwards;
+}
+
+.hero-feature-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: #ffffff;
+    font-weight: 600;
+}
+
+.hero-feature-item i {
+    font-size: 1.5rem;
+    color: #4fc3f7;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Services List Section */
+.services-list {
+    background-color: #f8f9fa;
+    padding: 80px 0;
+}
+
+.service-detail-card {
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 4rem 3rem;
+    margin-bottom: 4rem;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+    transition: all 0.4s ease;
+}
+
+.service-detail-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12);
+}
+
+.service-detail-card.alternate {
+    background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+}
+
+.service-badge {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, #4fc3f7 0%, #29b6f6 100%);
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 2rem;
+    box-shadow: 0 8px 25px rgba(79, 195, 247, 0.3);
+    transition: all 0.4s ease;
+}
+
+.service-detail-card:hover .service-badge {
+    transform: rotate(5deg) scale(1.1);
+}
+
+.service-badge i {
+    font-size: 2.5rem;
+    color: #ffffff;
+}
+
+.service-detail-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #1e3a5f;
+    margin-bottom: 1.5rem;
+}
+
+.service-detail-description {
+    font-size: 1.125rem;
+    color: #6c757d;
+    line-height: 1.8;
+    margin-bottom: 2.5rem;
+}
+
+.service-features-list {
+    margin-bottom: 2.5rem;
+}
+
+.feature-row {
+    display: flex;
+    gap: 1.25rem;
+    margin-bottom: 1.75rem;
+    align-items: flex-start;
+}
+
+.feature-row i {
+    color: #4fc3f7;
+    font-size: 1.75rem;
+    flex-shrink: 0;
+    margin-top: 0.25rem;
+}
+
+.feature-row strong {
+    color: #1e3a5f;
+    font-size: 1.125rem;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.feature-row p {
+    color: #6c757d;
+    font-size: 0.95rem;
+    margin: 0;
+    line-height: 1.6;
+}
+
+.btn-service {
+    background: linear-gradient(135deg, #4fc3f7 0%, #29b6f6 100%);
+    color: #ffffff;
+    padding: 1rem 2.5rem;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 1.05rem;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    box-shadow: 0 6px 20px rgba(79, 195, 247, 0.3);
+    transition: all 0.3s ease;
+}
+
+.btn-service:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 30px rgba(79, 195, 247, 0.4);
+    color: #ffffff;
+}
+
+.btn-service i {
+    transition: transform 0.3s ease;
+}
+
+.btn-service:hover i {
+    transform: translateX(5px);
+}
+
+/* Service Images */
+.service-detail-image {
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+    transition: all 0.4s ease;
+    min-height: 400px;
+    background: linear-gradient(135deg, #1e3a5f 0%, #2a5298 50%, #4fc3f7 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.service-detail-image::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url('data:image/svg+xml,<svg width="60" height="60" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="dots" width="30" height="30" patternUnits="userSpaceOnUse"><circle cx="15" cy="15" r="1.5" fill="rgba(255,255,255,0.08)"/></pattern></defs><rect width="100%" height="100%" fill="url(%23dots)"/></svg>');
+}
+
+.service-detail-card:hover .service-detail-image {
+    transform: scale(1.02);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+}
+
+.image-overlay {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 3rem 0;
+}
+
+.overlay-icon {
+    width: 140px;
+    height: 140px;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.4s ease, background 0.4s ease;
+}
+
+.service-detail-card:hover .overlay-icon {
+    transform: scale(1.1);
+    background: rgba(255, 255, 255, 0.22);
+}
+
+.overlay-icon i {
+    font-size: 4rem;
+    color: #ffffff;
+}
+
+/* Why Choose Us Section */
+.why-choose-us {
+    background: linear-gradient(135deg, #1e3a5f 0%, #2d5a7b 100%);
+    padding: 80px 0;
+    position: relative;
+}
+
+.section-header-center {
+    text-align: center;
+    margin-bottom: 4rem;
+}
+
+.section-title-white {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    margin-bottom: 1rem;
+}
+
+.section-subtitle-white {
+    font-size: 1.125rem;
+    color: rgba(255, 255, 255, 0.85);
+    margin: 0;
+}
+
+.why-card {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    padding: 2.5rem 2rem;
+    text-align: center;
+    transition: all 0.4s ease;
+    height: 100%;
+}
+
+.why-card:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(79, 195, 247, 0.5);
+    transform: translateY(-10px);
+}
+
+.why-icon {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, #4fc3f7 0%, #29b6f6 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+    box-shadow: 0 8px 25px rgba(79, 195, 247, 0.4);
+    transition: all 0.4s ease;
+}
+
+.why-card:hover .why-icon {
+    transform: rotate(360deg) scale(1.1);
+}
+
+.why-icon i {
+    font-size: 2.5rem;
+    color: #ffffff;
+}
+
+.why-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 1rem;
+}
+
+.why-description {
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* CTA Final Section */
+.services-cta-final {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    padding: 100px 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.services-cta-final::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -10%;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(79, 195, 247, 0.1) 0%, transparent 70%);
+    border-radius: 50%;
+}
+
+.services-cta-final::after {
+    content: '';
+    position: absolute;
+    bottom: -50%;
+    left: -10%;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(30, 58, 95, 0.1) 0%, transparent 70%);
+    border-radius: 50%;
+}
+
+.cta-content {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+}
+
+.cta-title {
+    font-size: 3rem;
+    font-weight: 800;
+    color: #1e3a5f;
+    margin-bottom: 1.5rem;
+}
+
+.cta-text {
+    font-size: 1.25rem;
+    color: #6c757d;
+    margin-bottom: 3rem;
+    line-height: 1.8;
+}
+
+.cta-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.btn-cta-primary,
+.btn-cta-secondary {
+    padding: 1.25rem 3rem;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 1.125rem;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.btn-cta-primary {
+    background: linear-gradient(135deg, #4fc3f7 0%, #29b6f6 100%);
+    color: #ffffff;
+}
+
+.btn-cta-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 35px rgba(79, 195, 247, 0.4);
+    color: #ffffff;
+}
+
+.btn-cta-secondary {
+    background: #ffffff;
+    color: #1e3a5f;
+    border: 2px solid #1e3a5f;
+}
+
+.btn-cta-secondary:hover {
+    background: #1e3a5f;
+    color: #ffffff;
+    transform: translateY(-3px);
+    box-shadow: 0 12px 35px rgba(30, 58, 95, 0.3);
+}
+
+/* Responsive Design */
+@media (max-width: 991px) {
+    .services-hero {
+        padding: 100px 0 60px;
+    }
+
+    .hero-title {
+        font-size: 2.75rem;
+    }
+
+    .hero-subtitle {
+        font-size: 1.125rem;
+    }
+
+    .hero-features {
+        gap: 2rem;
+    }
+
+    .service-detail-card {
+        padding: 3rem 2rem;
+        margin-bottom: 3rem;
+    }
+
+    .service-detail-title {
+        font-size: 2rem;
+    }
+
+    .cta-title {
+        font-size: 2.25rem;
+    }
+
+    .cta-text {
+        font-size: 1.125rem;
+    }
+}
+
+@media (max-width: 767px) {
+    .services-hero {
+        padding: 80px 0 50px;
+    }
+
+    .hero-title {
+        font-size: 2.25rem;
+    }
+
+    .hero-subtitle {
+        font-size: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .hero-features {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .service-detail-card {
+        padding: 2rem 1.5rem;
+        margin-bottom: 2.5rem;
+    }
+
+    .service-badge {
+        width: 70px;
+        height: 70px;
+        margin-bottom: 1.5rem;
+    }
+
+    .service-badge i {
+        font-size: 2rem;
+    }
+
+    .service-detail-title {
+        font-size: 1.75rem;
+        margin-bottom: 1rem;
+    }
+
+    .service-detail-description {
+        font-size: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .service-detail-image {
+        margin-bottom: 2rem;
+    }
+
+    .feature-row {
+        margin-bottom: 1.5rem;
+    }
+
+    .feature-row i {
+        font-size: 1.5rem;
+    }
+
+    .feature-row strong {
+        font-size: 1rem;
+    }
+
+    .btn-service {
+        width: 100%;
+        justify-content: center;
+        padding: 0.875rem 2rem;
+        font-size: 1rem;
+    }
+
+    .section-title-white {
+        font-size: 2rem;
+    }
+
+    .why-card {
+        padding: 2rem 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .why-icon {
+        width: 70px;
+        height: 70px;
+    }
+
+    .why-icon i {
+        font-size: 2rem;
+    }
+
+    .why-title {
+        font-size: 1.25rem;
+    }
+
+    .services-cta-final {
+        padding: 60px 0;
+    }
+
+    .cta-title {
+        font-size: 1.75rem;
+    }
+
+    .cta-text {
+        font-size: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .cta-buttons {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .btn-cta-primary,
+    .btn-cta-secondary {
+        width: 100%;
+        justify-content: center;
+        padding: 1rem 2rem;
+        font-size: 1rem;
+    }
+}

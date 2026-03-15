@@ -1,0 +1,354 @@
+<div class="admin-container">
+
+  <!-- Header -->
+  <div class="admin-header">
+    <div>
+      <h1>Gestion du Catalogue</h1>
+      <p class="subtitle">Gérez vos produits et catégories</p>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <button class="tab-btn" [class.active]="activeTab === 'products'" (click)="setTab('products')">
+      Produits
+      <span class="badge">{{ products.length }}</span>
+    </button>
+    <button class="tab-btn" [class.active]="activeTab === 'categories'" (click)="setTab('categories')">
+      Catégories
+      <span class="badge">{{ categories.length }}</span>
+    </button>
+  </div>
+
+  <!-- ═══════════════════════════════ PRODUCTS TAB ═══════════════════════════════ -->
+  <div *ngIf="activeTab === 'products'" class="tab-content">
+
+    <div class="toolbar">
+      <input
+        type="text"
+        class="search-input"
+        placeholder="Rechercher un produit..."
+        [(ngModel)]="productSearch"
+      />
+      <button class="btn btn-primary" (click)="openNewProduct()">+ Nouveau produit</button>
+    </div>
+
+    <div class="table-card" *ngIf="!loadingProducts; else loadingTpl">
+      <table *ngIf="filteredProducts.length > 0; else emptyProducts">
+        <thead>
+          <tr>
+            <th>Image</th>
+            <th>Nom</th>
+            <th>SKU</th>
+            <th>Catégorie</th>
+            <th>Prix</th>
+            <th>Stock</th>
+            <th>Statut</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let product of filteredProducts; trackBy: trackById">
+            <td>
+              <img
+                *ngIf="product.imageUrl"
+                [src]="product.imageUrl"
+                [alt]="product.name"
+                class="product-thumb"
+              />
+              <div *ngIf="!product.imageUrl" class="no-image">—</div>
+            </td>
+            <td>
+              <span class="product-name">{{ product.name }}</span>
+              <span *ngIf="product.isFeatured" class="pill pill-gold">Vedette</span>
+            </td>
+            <td class="mono">{{ product.sku }}</td>
+            <td>{{ getCategoryName(product.categoryId) }}</td>
+            <td class="mono">{{ product.price | number:'1.0-0' }} FCFA</td>
+            <td>
+              <span class="pill" [class.pill-green]="product.stockQuantity > 0" [class.pill-red]="product.stockQuantity === 0">
+                {{ product.stockQuantity }}
+              </span>
+            </td>
+            <td>
+              <span class="pill" [class.pill-green]="product.isActive" [class.pill-gray]="!product.isActive">
+                {{ product.isActive ? 'Actif' : 'Inactif' }}
+              </span>
+            </td>
+            <td class="actions">
+              <button class="btn btn-sm btn-outline" (click)="openEditProduct(product)">Modifier</button>
+              <button class="btn btn-sm btn-danger" (click)="confirmDelete('product', product.id!, product.name)">Supprimer</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <ng-template #emptyProducts>
+        <div class="empty-state">
+          <p>Aucun produit trouvé.</p>
+          <button class="btn btn-primary" (click)="openNewProduct()">Créer le premier produit</button>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════ CATEGORIES TAB ══════════════════════════════ -->
+  <div *ngIf="activeTab === 'categories'" class="tab-content">
+
+    <div class="toolbar">
+      <input
+        type="text"
+        class="search-input"
+        placeholder="Rechercher une catégorie..."
+        [(ngModel)]="categorySearch"
+      />
+      <button class="btn btn-primary" (click)="openNewCategory()">+ Nouvelle catégorie</button>
+    </div>
+
+    <div class="table-card" *ngIf="!loadingCategories; else loadingTpl">
+      <table *ngIf="filteredCategories.length > 0; else emptyCategories">
+        <thead>
+          <tr>
+            <th>Image</th>
+            <th>Nom</th>
+            <th>Slug</th>
+            <th>Description</th>
+            <th>Statut</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let cat of filteredCategories; trackBy: trackById">
+            <td>
+              <img *ngIf="cat.imageUrl" [src]="cat.imageUrl" [alt]="cat.name" class="product-thumb" />
+              <div *ngIf="!cat.imageUrl" class="no-image">—</div>
+            </td>
+            <td class="product-name">{{ cat.name }}</td>
+            <td class="mono">{{ cat.slug }}</td>
+            <td class="desc-cell">{{ cat.description || '—' }}</td>
+            <td>
+              <span class="pill" [class.pill-green]="cat.isActive" [class.pill-gray]="!cat.isActive">
+                {{ cat.isActive ? 'Active' : 'Inactive' }}
+              </span>
+            </td>
+            <td class="actions">
+              <button class="btn btn-sm btn-outline" (click)="openEditCategory(cat)">Modifier</button>
+              <button class="btn btn-sm btn-danger" (click)="confirmDelete('category', cat.id!, cat.name)">Supprimer</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <ng-template #emptyCategories>
+        <div class="empty-state">
+          <p>Aucune catégorie trouvée.</p>
+          <button class="btn btn-primary" (click)="openNewCategory()">Créer la première catégorie</button>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+
+  <!-- Loading template -->
+  <ng-template #loadingTpl>
+    <div class="loading-state">
+      <div class="spinner"></div>
+      <p>Chargement...</p>
+    </div>
+  </ng-template>
+
+</div>
+
+<!-- ═══════════════════════════ PRODUCT MODAL ═══════════════════════════ -->
+<div class="modal-overlay" *ngIf="showProductModal" (click)="closeProductModal()">
+  <div class="modal" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>{{ editingProduct ? 'Modifier le produit' : 'Nouveau produit' }}</h2>
+      <button class="close-btn" (click)="closeProductModal()">✕</button>
+    </div>
+
+    <div class="modal-body">
+      <div class="form-grid">
+
+        <!-- Name -->
+        <div class="field full">
+          <label>Nom du produit *</label>
+          <input type="text" [(ngModel)]="productForm.name" (ngModelChange)="onProductNameChange()" placeholder="Ex: Câble HDMI 2m" />
+        </div>
+
+        <!-- Slug -->
+        <div class="field full">
+          <label>Slug *</label>
+          <input type="text" [(ngModel)]="productForm.slug" placeholder="cable-hdmi-2m" />
+        </div>
+
+        <!-- Description -->
+        <div class="field full">
+          <label>Description</label>
+          <textarea rows="3" [(ngModel)]="productForm.description" placeholder="Description du produit..."></textarea>
+        </div>
+
+        <!-- Price -->
+        <div class="field">
+          <label>Prix (FCFA) *</label>
+          <input type="number" [(ngModel)]="productForm.price" min="0" placeholder="0" />
+        </div>
+
+        <!-- Compare at price -->
+        <div class="field">
+          <label>Prix barré (FCFA)</label>
+          <input type="number" [(ngModel)]="productForm.compareAtPrice" min="0" placeholder="0" />
+        </div>
+
+        <!-- SKU -->
+        <div class="field">
+          <label>SKU *</label>
+          <input type="text" [(ngModel)]="productForm.sku" placeholder="PROD-001" />
+        </div>
+
+        <!-- Stock -->
+        <div class="field">
+          <label>Stock *</label>
+          <input type="number" [(ngModel)]="productForm.stockQuantity" min="0" placeholder="0" />
+        </div>
+
+        <!-- Category -->
+        <div class="field full">
+          <label>Catégorie *</label>
+          <select [(ngModel)]="productForm.categoryId">
+            <option value="">-- Sélectionner une catégorie --</option>
+            <option *ngFor="let cat of categories" [value]="cat.id">{{ cat.name }}</option>
+          </select>
+        </div>
+
+        <!-- Image upload -->
+        <div class="field full">
+          <label>Image du produit</label>
+          <div class="image-upload-area">
+            <div class="image-preview" *ngIf="imagePreview">
+              <img [src]="imagePreview" alt="Aperçu" />
+              <button type="button" class="remove-image" (click)="clearSelectedFile()">✕</button>
+            </div>
+            <div class="upload-prompt" *ngIf="!imagePreview">
+              <label class="upload-label" for="fileInput">
+                <span class="upload-icon">📷</span>
+                <span>Cliquer pour choisir une image</span>
+                <small>JPEG, PNG, WebP, GIF — max 10 Mo</small>
+              </label>
+            </div>
+            <input
+              id="fileInput"
+              type="file"
+              accept="image/jpeg,image/png,image/webp,image/gif"
+              (change)="onFileSelected($event)"
+              style="display:none"
+            />
+          </div>
+          <div *ngIf="!imagePreview" class="or-divider">ou</div>
+          <input
+            *ngIf="!imagePreview"
+            type="text"
+            [(ngModel)]="productForm.imageUrl"
+            placeholder="URL directe de l'image (optionnel)"
+          />
+        </div>
+
+        <!-- Toggles -->
+        <div class="field">
+          <label class="toggle-label">
+            <input type="checkbox" [(ngModel)]="productForm.isActive" />
+            <span>Produit actif</span>
+          </label>
+        </div>
+        <div class="field">
+          <label class="toggle-label">
+            <input type="checkbox" [(ngModel)]="productForm.isFeatured" />
+            <span>Produit vedette</span>
+          </label>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-outline" (click)="closeProductModal()">Annuler</button>
+      <button
+        class="btn btn-primary"
+        (click)="saveProduct()"
+        [disabled]="!isProductFormValid() || saving || uploading"
+      >
+        <span *ngIf="uploading">Upload en cours...</span>
+        <span *ngIf="saving && !uploading">Enregistrement...</span>
+        <span *ngIf="!saving && !uploading">{{ editingProduct ? 'Mettre à jour' : 'Créer le produit' }}</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════ CATEGORY MODAL ═══════════════════════════ -->
+<div class="modal-overlay" *ngIf="showCategoryModal" (click)="closeCategoryModal()">
+  <div class="modal modal-sm" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>{{ editingCategory ? 'Modifier la catégorie' : 'Nouvelle catégorie' }}</h2>
+      <button class="close-btn" (click)="closeCategoryModal()">✕</button>
+    </div>
+
+    <div class="modal-body">
+      <div class="form-grid">
+
+        <div class="field full">
+          <label>Nom *</label>
+          <input type="text" [(ngModel)]="categoryForm.name" (ngModelChange)="onCategoryNameChange()" placeholder="Ex: Câbles & Accessoires" />
+        </div>
+
+        <div class="field full">
+          <label>Slug *</label>
+          <input type="text" [(ngModel)]="categoryForm.slug" placeholder="cables-accessoires" />
+        </div>
+
+        <div class="field full">
+          <label>Description</label>
+          <textarea rows="2" [(ngModel)]="categoryForm.description" placeholder="Description de la catégorie..."></textarea>
+        </div>
+
+        <div class="field full">
+          <label>URL de l'image</label>
+          <input type="text" [(ngModel)]="categoryForm.imageUrl" placeholder="https://..." />
+        </div>
+
+        <div class="field full">
+          <label class="toggle-label">
+            <input type="checkbox" [(ngModel)]="categoryForm.isActive" />
+            <span>Catégorie active</span>
+          </label>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-outline" (click)="closeCategoryModal()">Annuler</button>
+      <button
+        class="btn btn-primary"
+        (click)="saveCategory()"
+        [disabled]="!isCategoryFormValid() || saving"
+      >
+        {{ saving ? 'Enregistrement...' : (editingCategory ? 'Mettre à jour' : 'Créer') }}
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════ DELETE CONFIRM DIALOG ═══════════════════════ -->
+<div class="modal-overlay" *ngIf="showDeleteConfirm" (click)="cancelDelete()">
+  <div class="modal modal-xs" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>Confirmer la suppression</h2>
+    </div>
+    <div class="modal-body">
+      <p>Voulez-vous vraiment supprimer <strong>{{ deleteTarget?.name }}</strong> ?</p>
+      <p class="warning-text">Cette action est irréversible.</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" (click)="cancelDelete()">Annuler</button>
+      <button class="btn btn-danger" (click)="executeDelete()">Supprimer</button>
+    </div>
+  </div>
+</div>

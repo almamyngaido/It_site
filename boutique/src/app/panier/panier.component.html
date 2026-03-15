@@ -1,0 +1,313 @@
+<div class="panier-page">
+    <div class="container">
+        <h1 class="page-title">Mon Panier</h1>
+
+        <!-- Success Message -->
+        <div class="alert alert-success" *ngIf="successMessage">
+            <i class="bi bi-check-circle me-2"></i>
+            {{ successMessage }}
+        </div>
+
+        <!-- Empty Cart -->
+        <div class="empty-cart" *ngIf="cart.items.length === 0">
+            <i class="bi bi-cart-x"></i>
+            <h2>Votre panier est vide</h2>
+            <p>Découvrez nos produits et ajoutez-les à votre panier</p>
+            <button class="btn btn-primary" (click)="continueShopping()">
+                <i class="bi bi-shop me-2"></i>
+                Continuer les achats
+            </button>
+        </div>
+
+        <!-- Cart with Items -->
+        <div class="row" *ngIf="cart.items.length > 0 && !showCheckoutForm">
+            <!-- Cart Items -->
+            <div class="col-lg-8">
+                <div class="cart-items">
+                    <div class="cart-header">
+                        <h3>Articles ({{ cart.itemCount }})</h3>
+                        <button class="btn btn-link text-danger" (click)="clearCart()">
+                            <i class="bi bi-trash me-1"></i>
+                            Vider le panier
+                        </button>
+                    </div>
+
+                    <div class="cart-item" *ngFor="let item of cart.items">
+                        <div class="item-image">
+                            <img [src]="getProductImage(item)" [alt]="item.product?.name">
+                        </div>
+                        <div class="item-details">
+                            <h4 class="item-name">{{ item.product?.name }}</h4>
+                            <p class="item-category">{{ item.product?.category?.name }}</p>
+                            <p class="item-sku">SKU: {{ item.product?.sku }}</p>
+                        </div>
+                        <div class="item-quantity">
+                            <button class="qty-btn" (click)="updateQuantity(item, -1)">
+                                <i class="bi bi-dash"></i>
+                            </button>
+                            <span class="qty-value">{{ item.quantity }}</span>
+                            <button class="qty-btn" (click)="updateQuantity(item, 1)">
+                                <i class="bi bi-plus"></i>
+                            </button>
+                        </div>
+                        <div class="item-price">
+                            <p class="unit-price">{{ item.price.toFixed(2) }} FCFA</p>
+                            <p class="subtotal">{{ (item.subtotal || 0).toFixed(2) }} FCFA</p>
+                        </div>
+                        <div class="item-actions">
+                            <button class="btn-remove" (click)="removeItem(item)">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="btn btn-outline-primary mt-3" (click)="continueShopping()">
+                    <i class="bi bi-arrow-left me-2"></i>
+                    Continuer les achats
+                </button>
+            </div>
+
+            <!-- Cart Summary -->
+            <div class="col-lg-4">
+                <div class="cart-summary">
+                    <h3>Récapitulatif</h3>
+
+                    <div class="summary-row">
+                        <span>Sous-total ({{ cart.itemCount }} articles)</span>
+                        <span>{{ cart.total.toFixed(2) }} FCFA</span>
+                    </div>
+
+                    <div class="summary-row">
+                        <span>Livraison</span>
+                        <span>{{ getShippingCost() === 0 ? 'Gratuite' : getShippingCost().toFixed(2) + ' FCFA' }}</span>
+                    </div>
+
+                    <div class="summary-divider"></div>
+
+                    <div class="summary-row total">
+                        <span>Total</span>
+                        <span>{{ getGrandTotal().toFixed(2) }} FCFA</span>
+                    </div>
+
+                    <button class="btn btn-primary btn-checkout" (click)="proceedToCheckout()">
+                        <i class="bi bi-lock me-2"></i>
+                        Passer la commande
+                    </button>
+
+                    <div class="shipping-info">
+                        <i class="bi bi-truck"></i>
+                        <p>Livraison gratuite à partir de 50 000 FCFA</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Checkout Form -->
+        <div class="checkout-form" *ngIf="showCheckoutForm && cart.items.length > 0">
+            <div class="row">
+                <div class="col-lg-8">
+                    <h2>Informations de livraison</h2>
+
+                    <!-- Error Message -->
+                    <div class="alert alert-danger" *ngIf="error">
+                        <i class="bi bi-exclamation-triangle me-2"></i>
+                        {{ error }}
+                    </div>
+
+                    <form>
+                        <!-- Guest email field (shown only when not logged in) -->
+                        <div class="mb-3" *ngIf="!isLoggedIn">
+                            <label>Email * <small class="text-muted">(pour le suivi de votre commande)</small></label>
+                            <input type="email" class="form-control" [(ngModel)]="guestEmail" name="guestEmail" placeholder="votre@email.com" required>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label>Prénom *</label>
+                                <input type="text" class="form-control" [(ngModel)]="shippingAddress.firstName" name="firstName" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label>Nom *</label>
+                                <input type="text" class="form-control" [(ngModel)]="shippingAddress.lastname" name="lastname" required>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label>Téléphone *</label>
+                            <input type="tel" class="form-control" [(ngModel)]="shippingAddress.phone" name="phone" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label>Adresse *</label>
+                            <input type="text" class="form-control" [(ngModel)]="shippingAddress.adress" name="adress" required>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label>Ville *</label>
+                                <input type="text" class="form-control" [(ngModel)]="shippingAddress.city" name="city" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label>Région *</label>
+                                <input type="text" class="form-control" [(ngModel)]="shippingAddress.region" name="region" required>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label>Code postal</label>
+                                <input type="text" class="form-control" [(ngModel)]="shippingAddress.postalCode" name="postalCode">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label>Pays *</label>
+                                <input type="text" class="form-control" [(ngModel)]="shippingAddress.country" name="country" required>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-outline-secondary" (click)="cancelCheckout()">
+                                Annuler
+                            </button>
+                            <button type="button" class="btn btn-primary" (click)="submitOrder()" [disabled]="isLoading">
+                                <span *ngIf="!isLoading">
+                                    <i class="bi bi-check-circle me-2"></i>
+                                    Confirmer la commande
+                                </span>
+                                <span *ngIf="isLoading">
+                                    <span class="spinner-border spinner-border-sm me-2"></span>
+                                    Traitement...
+                                </span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="cart-summary">
+                        <h3>Votre commande</h3>
+
+                        <div class="order-items">
+                            <div class="order-item" *ngFor="let item of cart.items">
+                                <span>{{ item.product?.name }} x {{ item.quantity }}</span>
+                                <span>{{ (item.subtotal || 0).toFixed(2) }} FCFA</span>
+                            </div>
+                        </div>
+
+                        <div class="summary-divider"></div>
+
+                        <div class="summary-row">
+                            <span>Sous-total</span>
+                            <span>{{ cart.total.toFixed(2) }} FCFA</span>
+                        </div>
+
+                        <div class="summary-row">
+                            <span>Livraison</span>
+                            <span>{{ getShippingCost() === 0 ? 'Gratuite' : getShippingCost().toFixed(2) + ' FCFA' }}</span>
+                        </div>
+
+                        <div class="summary-divider"></div>
+
+                        <div class="summary-row total">
+                            <span>Total</span>
+                            <span>{{ getGrandTotal().toFixed(2) }} FCFA</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Login/Register Modal -->
+<div class="modal-overlay" *ngIf="showLoginModal" (click)="closeLoginModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+            <h3>{{ isRegistering ? 'Créer un compte' : 'Connexion' }}</h3>
+            <button class="btn-close" (click)="closeLoginModal()">
+                <i class="bi bi-x"></i>
+            </button>
+        </div>
+
+        <div class="modal-body">
+            <!-- Error Message -->
+            <div class="alert alert-danger" *ngIf="error">
+                <i class="bi bi-exclamation-triangle me-2"></i>
+                {{ error }}
+            </div>
+
+            <!-- Login Form -->
+            <form *ngIf="!isRegistering" (ngSubmit)="login()">
+                <div class="mb-3">
+                    <label>Email *</label>
+                    <input type="email" class="form-control" [(ngModel)]="loginForm.email" name="email" required>
+                </div>
+
+                <div class="mb-3">
+                    <label>Mot de passe *</label>
+                    <input type="password" class="form-control" [(ngModel)]="loginForm.password" name="password" required>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100" [disabled]="isLoading">
+                    <span *ngIf="!isLoading">Se connecter</span>
+                    <span *ngIf="isLoading">
+                        <span class="spinner-border spinner-border-sm me-2"></span>
+                        Connexion...
+                    </span>
+                </button>
+            </form>
+
+            <!-- Register Form -->
+            <form *ngIf="isRegistering" (ngSubmit)="register()">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label>Prénom *</label>
+                        <input type="text" class="form-control" [(ngModel)]="registerForm.firstName" name="firstName" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label>Nom *</label>
+                        <input type="text" class="form-control" [(ngModel)]="registerForm.lastName" name="lastName" required>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label>Email *</label>
+                    <input type="email" class="form-control" [(ngModel)]="registerForm.email" name="email" required>
+                </div>
+
+                <div class="mb-3">
+                    <label>Téléphone</label>
+                    <input type="tel" class="form-control" [(ngModel)]="registerForm.phone" name="phone">
+                </div>
+
+                <div class="mb-3">
+                    <label>Mot de passe *</label>
+                    <input type="password" class="form-control" [(ngModel)]="registerForm.password" name="password" required>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100" [disabled]="isLoading">
+                    <span *ngIf="!isLoading">S'inscrire</span>
+                    <span *ngIf="isLoading">
+                        <span class="spinner-border spinner-border-sm me-2"></span>
+                        Inscription...
+                    </span>
+                </button>
+            </form>
+
+            <div class="text-center mt-3">
+                <button class="btn btn-link" (click)="toggleAuthMode()">
+                    {{ isRegistering ? 'Déjà un compte ? Se connecter' : 'Pas encore de compte ? S\'inscrire' }}
+                </button>
+            </div>
+
+            <div class="separator my-3">
+                <span>ou</span>
+            </div>
+
+            <button type="button" class="btn btn-outline-secondary w-100" (click)="continueAsGuest()">
+                <i class="bi bi-person me-2"></i>
+                Continuer en tant qu'invité
+            </button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,190 @@
+<div class="profil-page">
+    <div class="container">
+        <h1 class="page-title">Mon Profil</h1>
+
+        <!-- Success Message -->
+        <div class="alert alert-success" *ngIf="successMessage">
+            <i class="bi bi-check-circle me-2"></i>
+            {{ successMessage }}
+        </div>
+
+        <!-- Error Message -->
+        <div class="alert alert-danger" *ngIf="error">
+            <i class="bi bi-exclamation-triangle me-2"></i>
+            {{ error }}
+        </div>
+
+        <div class="row">
+            <!-- Profile Information -->
+            <div class="col-lg-4">
+                <div class="profile-card">
+                    <div class="profile-header">
+                        <div class="profile-avatar">
+                            <i class="bi bi-person-circle"></i>
+                        </div>
+                        <h3>{{ currentUser?.firstName }} {{ currentUser?.lastName }}</h3>
+                        <p class="text-muted">{{ currentUser?.email }}</p>
+                    </div>
+
+                    <div class="profile-info" *ngIf="!isEditMode">
+                        <div class="info-item">
+                            <i class="bi bi-person"></i>
+                            <div>
+                                <label>Nom complet</label>
+                                <p>{{ currentUser?.firstName }} {{ currentUser?.lastName }}</p>
+                            </div>
+                        </div>
+
+                        <div class="info-item">
+                            <i class="bi bi-envelope"></i>
+                            <div>
+                                <label>Email</label>
+                                <p>{{ currentUser?.email }}</p>
+                            </div>
+                        </div>
+
+                        <div class="info-item" *ngIf="currentUser?.phone">
+                            <i class="bi bi-telephone"></i>
+                            <div>
+                                <label>Téléphone</label>
+                                <p>{{ currentUser?.phone }}</p>
+                            </div>
+                        </div>
+
+                        <div class="info-item">
+                            <i class="bi bi-shield-check"></i>
+                            <div>
+                                <label>Rôle</label>
+                                <p>{{ currentUser?.role || 'Client' }}</p>
+                            </div>
+                        </div>
+
+                        <button class="btn btn-primary w-100 mt-3" (click)="toggleEditMode()">
+                            <i class="bi bi-pencil me-2"></i>
+                            Modifier le profil
+                        </button>
+                    </div>
+
+                    <!-- Edit Form -->
+                    <div class="profile-edit" *ngIf="isEditMode">
+                        <form>
+                            <div class="mb-3">
+                                <label>Prénom</label>
+                                <input type="text" class="form-control" [(ngModel)]="editForm.firstName" name="firstName">
+                            </div>
+
+                            <div class="mb-3">
+                                <label>Nom</label>
+                                <input type="text" class="form-control" [(ngModel)]="editForm.lastName" name="lastName">
+                            </div>
+
+                            <div class="mb-3">
+                                <label>Téléphone</label>
+                                <input type="tel" class="form-control" [(ngModel)]="editForm.phone" name="phone">
+                            </div>
+
+                            <div class="d-flex gap-2">
+                                <button type="button" class="btn btn-outline-secondary flex-fill" (click)="toggleEditMode()">
+                                    Annuler
+                                </button>
+                                <button type="button" class="btn btn-primary flex-fill" (click)="saveProfile()" [disabled]="isLoading">
+                                    <span *ngIf="!isLoading">Enregistrer</span>
+                                    <span *ngIf="isLoading">
+                                        <span class="spinner-border spinner-border-sm me-2"></span>
+                                        En cours...
+                                    </span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Orders/Transactions -->
+            <div class="col-lg-8">
+                <div class="orders-section">
+                    <div class="section-header">
+                        <h3>
+                            <i class="bi bi-bag-check me-2"></i>
+                            Mes Commandes
+                        </h3>
+                        <span class="badge bg-primary">{{ orders.length }} commande(s)</span>
+                    </div>
+
+                    <!-- Loading -->
+                    <div class="text-center py-5" *ngIf="isLoading">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Chargement...</span>
+                        </div>
+                        <p class="mt-3">Chargement des commandes...</p>
+                    </div>
+
+                    <!-- No Orders -->
+                    <div class="no-orders" *ngIf="!isLoading && orders.length === 0">
+                        <i class="bi bi-bag-x"></i>
+                        <h4>Aucune commande</h4>
+                        <p>Vous n'avez pas encore passé de commande</p>
+                        <a routerLink="/catalogue" class="btn btn-primary">
+                            <i class="bi bi-shop me-2"></i>
+                            Découvrir nos produits
+                        </a>
+                    </div>
+
+                    <!-- Orders List -->
+                    <div class="orders-list" *ngIf="!isLoading && orders.length > 0">
+                        <div class="order-card" *ngFor="let order of orders">
+                            <div class="order-header">
+                                <div>
+                                    <h5>Commande #{{ order.orderNumber }}</h5>
+                                    <p class="order-date">{{ formatDate(order.orderDtate || order.createdAt!) }}</p>
+                                </div>
+                                <span class="badge" [ngClass]="getStatusBadgeClass(order.statud)">
+                                    {{ getOrderStatusLabel(order.statud) }}
+                                </span>
+                            </div>
+
+                            <div class="order-body">
+                                <div class="order-items" *ngIf="order.orderItems && order.orderItems.length > 0">
+                                    <div class="order-item" *ngFor="let item of order.orderItems">
+                                        <span>{{ item.productName || item.product?.name || 'Produit' }} x {{ item.quantity }}</span>
+                                        <span>{{ item.total.toFixed(2) }} FCFA</span>
+                                    </div>
+                                </div>
+
+                                <div class="order-summary">
+                                    <div class="summary-row">
+                                        <span>Sous-total</span>
+                                        <span>{{ order.subtotal.toFixed(2) }} FCFA</span>
+                                    </div>
+                                    <div class="summary-row" *ngIf="order.shippingCost">
+                                        <span>Livraison</span>
+                                        <span>{{ order.shippingCost.toFixed(2) }} FCFA</span>
+                                    </div>
+                                    <div class="summary-row" *ngIf="order.tax">
+                                        <span>Taxe</span>
+                                        <span>{{ order.tax.toFixed(2) }} FCFA</span>
+                                    </div>
+                                    <div class="summary-row total">
+                                        <span>Total</span>
+                                        <span>{{ order.total.toFixed(2) }} FCFA</span>
+                                    </div>
+                                </div>
+
+                                <div class="order-meta">
+                                    <span class="meta-item">
+                                        <i class="bi bi-credit-card"></i>
+                                        {{ order.paymentMethod || 'Espèces' }}
+                                    </span>
+                                    <span class="meta-item">
+                                        <i class="bi bi-circle-fill" [class.text-success]="order.paymentStatus === 'paid'" [class.text-warning]="order.paymentStatus === 'pending'"></i>
+                                        {{ order.paymentStatus === 'paid' ? 'Payé' : 'En attente' }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

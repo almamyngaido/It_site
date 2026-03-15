@@ -1,0 +1,103 @@
+.footer {
+    background-color: #e9ecef;
+    padding: 60px 0 20px;
+    margin-top: 80px;
+}
+
+.footer-brand .brand-icon {
+    color: var(--primary-color);
+    font-size: 2rem;
+    margin-right: 0.5rem;
+}
+
+.footer-brand .brand-text {
+    color: var(--secondary-color);
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.footer-description {
+    color: #6c757d;
+    font-size: 0.875rem;
+    line-height: 1.6;
+    margin-top: 1rem;
+}
+
+.footer-heading {
+    color: var(--secondary-color);
+    font-size: 1.125rem;
+    font-weight: 700;
+    margin-bottom: 1.25rem;
+}
+
+.footer-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-links li {
+    margin-bottom: 0.75rem;
+}
+
+.footer-links a {
+    color: #6c757d;
+    text-decoration: none;
+    font-size: 0.875rem;
+    transition: color 0.3s ease;
+}
+
+.footer-links a:hover {
+    color: var(--primary-color);
+}
+
+.footer-contact {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    color: #6c757d;
+    font-size: 0.875rem;
+}
+
+.footer-contact li {
+    margin-bottom: 0.75rem;
+}
+
+.footer-contact a {
+    color: #6c757d;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.footer-contact a:hover {
+    color: var(--primary-color);
+}
+
+.footer-bottom {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid #dee2e6;
+    text-align: center;
+}
+
+.copyright {
+    color: #6c757d;
+    font-size: 0.875rem;
+    margin: 0;
+}
+
+@media (max-width: 991px) {
+    .footer {
+        padding: 40px 0 20px;
+    }
+
+    .footer-heading {
+        margin-top: 1.5rem;
+    }
+}
+
+@media (max-width: 767px) {
+    .footer {
+        margin-top: 60px;
+    }
+}

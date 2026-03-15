@@ -1,0 +1,225 @@
+<div class="login-page">
+    <div class="container">
+        <div class="auth-container">
+            <div class="auth-card">
+                <!-- Header -->
+                <div class="auth-header">
+                    <div class="logo">
+                        <i class="bi bi-shield-lock"></i>
+                    </div>
+                    <h2>{{ isRegistering ? 'Créer un compte' : 'Connexion' }}</h2>
+                    <p>{{ isRegistering ? 'Rejoignez-nous et profitez de nos services' : 'Bienvenue ! Connectez-vous à votre compte' }}</p>
+                </div>
+
+                <!-- Success Message -->
+                <div class="alert alert-success" *ngIf="successMessage">
+                    <i class="bi bi-check-circle me-2"></i>
+                    {{ successMessage }}
+                </div>
+
+                <!-- Error Message -->
+                <div class="alert alert-danger" *ngIf="error">
+                    <i class="bi bi-exclamation-triangle me-2"></i>
+                    {{ error }}
+                </div>
+
+                <!-- Login Form -->
+                <form *ngIf="!isRegistering" (ngSubmit)="login()" class="auth-form">
+                    <div class="form-group">
+                        <label for="loginEmail">
+                            <i class="bi bi-envelope me-2"></i>
+                            Adresse email
+                        </label>
+                        <input
+                            type="email"
+                            id="loginEmail"
+                            class="form-control"
+                            [(ngModel)]="loginForm.email"
+                            name="email"
+                            placeholder="votre@email.com"
+                            required
+                            [disabled]="isLoading">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="loginPassword">
+                            <i class="bi bi-lock me-2"></i>
+                            Mot de passe
+                        </label>
+                        <input
+                            type="password"
+                            id="loginPassword"
+                            class="form-control"
+                            [(ngModel)]="loginForm.password"
+                            name="password"
+                            placeholder="••••••••"
+                            required
+                            [disabled]="isLoading">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-auth" [disabled]="isLoading">
+                        <span *ngIf="!isLoading">
+                            <i class="bi bi-box-arrow-in-right me-2"></i>
+                            Se connecter
+                        </span>
+                        <span *ngIf="isLoading">
+                            <span class="spinner-border spinner-border-sm me-2"></span>
+                            Connexion...
+                        </span>
+                    </button>
+                </form>
+
+                <!-- Register Form -->
+                <form *ngIf="isRegistering" (ngSubmit)="register()" class="auth-form">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="registerFirstName">
+                                    <i class="bi bi-person me-2"></i>
+                                    Prénom *
+                                </label>
+                                <input
+                                    type="text"
+                                    id="registerFirstName"
+                                    class="form-control"
+                                    [(ngModel)]="registerForm.firstName"
+                                    name="firstName"
+                                    placeholder="Votre prénom"
+                                    required
+                                    [disabled]="isLoading">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="registerLastName">
+                                    <i class="bi bi-person me-2"></i>
+                                    Nom *
+                                </label>
+                                <input
+                                    type="text"
+                                    id="registerLastName"
+                                    class="form-control"
+                                    [(ngModel)]="registerForm.lastName"
+                                    name="lastName"
+                                    placeholder="Votre nom"
+                                    required
+                                    [disabled]="isLoading">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="registerEmail">
+                            <i class="bi bi-envelope me-2"></i>
+                            Adresse email *
+                        </label>
+                        <input
+                            type="email"
+                            id="registerEmail"
+                            class="form-control"
+                            [(ngModel)]="registerForm.email"
+                            name="email"
+                            placeholder="votre@email.com"
+                            required
+                            [disabled]="isLoading">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="registerPhone">
+                            <i class="bi bi-telephone me-2"></i>
+                            Téléphone
+                        </label>
+                        <input
+                            type="tel"
+                            id="registerPhone"
+                            class="form-control"
+                            [(ngModel)]="registerForm.phone"
+                            name="phone"
+                            placeholder="+221 7X XXX XX XX"
+                            [disabled]="isLoading">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="registerPassword">
+                            <i class="bi bi-lock me-2"></i>
+                            Mot de passe *
+                        </label>
+                        <input
+                            type="password"
+                            id="registerPassword"
+                            class="form-control"
+                            [(ngModel)]="registerForm.password"
+                            name="password"
+                            placeholder="••••••••"
+                            required
+                            [disabled]="isLoading">
+                        <small class="form-text">Au moins 6 caractères</small>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-auth" [disabled]="isLoading">
+                        <span *ngIf="!isLoading">
+                            <i class="bi bi-person-plus me-2"></i>
+                            S'inscrire
+                        </span>
+                        <span *ngIf="isLoading">
+                            <span class="spinner-border spinner-border-sm me-2"></span>
+                            Inscription...
+                        </span>
+                    </button>
+                </form>
+
+                <!-- Toggle Auth Mode -->
+                <div class="auth-toggle">
+                    <p *ngIf="!isRegistering">
+                        Pas encore de compte ?
+                        <button type="button" class="btn-link" (click)="toggleAuthMode()">
+                            S'inscrire
+                        </button>
+                    </p>
+                    <p *ngIf="isRegistering">
+                        Déjà un compte ?
+                        <button type="button" class="btn-link" (click)="toggleAuthMode()">
+                            Se connecter
+                        </button>
+                    </p>
+                </div>
+
+                <!-- Divider -->
+                <div class="divider">
+                    <span>ou</span>
+                </div>
+
+                <!-- Back to Home -->
+                <a routerLink="/" class="btn btn-outline-secondary btn-back">
+                    <i class="bi bi-house me-2"></i>
+                    Retour à l'accueil
+                </a>
+            </div>
+
+            <!-- Side Image/Info -->
+            <div class="auth-side">
+                <div class="side-content">
+                    <h3>Découvrez nos produits et services</h3>
+                    <ul class="features-list">
+                        <li>
+                            <i class="bi bi-check-circle"></i>
+                            <span>Matériel informatique de qualité</span>
+                        </li>
+                        <li>
+                            <i class="bi bi-check-circle"></i>
+                            <span>Services de développement logiciel</span>
+                        </li>
+                        <li>
+                            <i class="bi bi-check-circle"></i>
+                            <span>Livraison gratuite à partir de 500 FCFA</span>
+                        </li>
+                        <li>
+                            <i class="bi bi-check-circle"></i>
+                            <span>Support technique expert</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

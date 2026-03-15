@@ -1,0 +1,314 @@
+<div class="contact-page">
+    <div class="container">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1 class="page-title">Contactez-nous</h1>
+            <p class="page-subtitle">Demandez un devis ou contactez notre équipe pour toute question</p>
+        </div>
+
+        <div class="row">
+            <!-- Contact Form -->
+            <div class="col-lg-8">
+                <div class="contact-card">
+                    <div class="card-header">
+                        <h2>
+                            <i class="bi bi-envelope me-2"></i>
+                            Envoyez-nous un message
+                        </h2>
+                        <p>Remplissez le formulaire ci-dessous et nous vous répondrons dans les plus brefs délais</p>
+                    </div>
+
+                    <!-- Success Message -->
+                    <div class="alert alert-success" *ngIf="isSubmitted && successMessage">
+                        <i class="bi bi-check-circle me-2"></i>
+                        {{ successMessage }}
+                    </div>
+
+                    <!-- Error Message -->
+                    <div class="alert alert-danger" *ngIf="error">
+                        <i class="bi bi-exclamation-triangle me-2"></i>
+                        {{ error }}
+                    </div>
+
+                    <!-- Contact Form -->
+                    <form *ngIf="!isSubmitted" (ngSubmit)="submitForm()">
+                        <!-- Request Type -->
+                        <div class="form-group mb-4">
+                            <label class="form-label">
+                                <i class="bi bi-clipboard-check me-2"></i>
+                                Type de demande *
+                            </label>
+                            <div class="request-type-buttons">
+                                <button
+                                    type="button"
+                                    class="request-type-btn"
+                                    [class.active]="contactForm.requestType === 'quote'"
+                                    (click)="contactForm.requestType = 'quote'">
+                                    <i class="bi bi-file-earmark-text"></i>
+                                    <span>Devis</span>
+                                </button>
+                                <button
+                                    type="button"
+                                    class="request-type-btn"
+                                    [class.active]="contactForm.requestType === 'support'"
+                                    (click)="contactForm.requestType = 'support'">
+                                    <i class="bi bi-headset"></i>
+                                    <span>Support</span>
+                                </button>
+                                <button
+                                    type="button"
+                                    class="request-type-btn"
+                                    [class.active]="contactForm.requestType === 'info'"
+                                    (click)="contactForm.requestType = 'info'">
+                                    <i class="bi bi-info-circle"></i>
+                                    <span>Information</span>
+                                </button>
+                                <button
+                                    type="button"
+                                    class="request-type-btn"
+                                    [class.active]="contactForm.requestType === 'other'"
+                                    (click)="contactForm.requestType = 'other'">
+                                    <i class="bi bi-chat-dots"></i>
+                                    <span>Autre</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Name Fields -->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label for="firstName" class="form-label">
+                                        Prénom *
+                                    </label>
+                                    <input
+                                        type="text"
+                                        id="firstName"
+                                        class="form-control"
+                                        [(ngModel)]="contactForm.firstName"
+                                        name="firstName"
+                                        placeholder="Votre prénom"
+                                        required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label for="lastName" class="form-label">
+                                        Nom *
+                                    </label>
+                                    <input
+                                        type="text"
+                                        id="lastName"
+                                        class="form-control"
+                                        [(ngModel)]="contactForm.lastName"
+                                        name="lastName"
+                                        placeholder="Votre nom"
+                                        required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Email and Phone -->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label for="email" class="form-label">
+                                        Email *
+                                    </label>
+                                    <input
+                                        type="email"
+                                        id="email"
+                                        class="form-control"
+                                        [(ngModel)]="contactForm.email"
+                                        name="email"
+                                        placeholder="votre.email@exemple.com"
+                                        required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label for="phone" class="form-label">
+                                        Téléphone *
+                                    </label>
+                                    <input
+                                        type="tel"
+                                        id="phone"
+                                        class="form-control"
+                                        [(ngModel)]="contactForm.phone"
+                                        name="phone"
+                                        placeholder="+221 7X XXX XX XX"
+                                        required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Company (Optional) -->
+                        <div class="form-group mb-3">
+                            <label for="company" class="form-label">
+                                Entreprise (Optionnel)
+                            </label>
+                            <input
+                                type="text"
+                                id="company"
+                                class="form-control"
+                                [(ngModel)]="contactForm.company"
+                                name="company"
+                                placeholder="Nom de votre entreprise">
+                        </div>
+
+                        <!-- Subject -->
+                        <div class="form-group mb-3">
+                            <label for="subject" class="form-label">
+                                Sujet *
+                            </label>
+                            <input
+                                type="text"
+                                id="subject"
+                                class="form-control"
+                                [(ngModel)]="contactForm.subject"
+                                name="subject"
+                                placeholder="Objet de votre message"
+                                required>
+                        </div>
+
+                        <!-- Message -->
+                        <div class="form-group mb-4">
+                            <label for="message" class="form-label">
+                                Message *
+                            </label>
+                            <textarea
+                                id="message"
+                                class="form-control"
+                                [(ngModel)]="contactForm.message"
+                                name="message"
+                                rows="6"
+                                placeholder="Décrivez votre demande en détail..."
+                                required></textarea>
+                            <small class="form-text text-muted">
+                                Minimum 10 caractères
+                            </small>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary btn-lg" [disabled]="isLoading">
+                                <span *ngIf="!isLoading">
+                                    <i class="bi bi-send me-2"></i>
+                                    Envoyer le message
+                                </span>
+                                <span *ngIf="isLoading">
+                                    <span class="spinner-border spinner-border-sm me-2"></span>
+                                    Envoi en cours...
+                                </span>
+                            </button>
+                            <button type="button" class="btn btn-outline-secondary btn-lg" (click)="resetForm()" [disabled]="isLoading">
+                                <i class="bi bi-arrow-clockwise me-2"></i>
+                                Réinitialiser
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Contact Info Sidebar -->
+            <div class="col-lg-4">
+                <!-- Contact Information -->
+                <div class="info-card">
+                    <h3>
+                        <i class="bi bi-building me-2"></i>
+                        Nos Coordonnées
+                    </h3>
+
+                    <div class="info-item">
+                        <div class="info-icon">
+                            <i class="bi bi-envelope-fill"></i>
+                        </div>
+                        <div class="info-content">
+                            <label>Email</label>
+                            <a href="mailto:{{ contactInfo.email }}">{{ contactInfo.email }}</a>
+                        </div>
+                    </div>
+
+                    <div class="info-item">
+                        <div class="info-icon">
+                            <i class="bi bi-telephone-fill"></i>
+                        </div>
+                        <div class="info-content">
+                            <label>Téléphone</label>
+                            <a href="tel:{{ contactInfo.phone }}">{{ contactInfo.phone }}</a>
+                        </div>
+                    </div>
+
+                    <div class="info-item">
+                        <div class="info-icon">
+                            <i class="bi bi-geo-alt-fill"></i>
+                        </div>
+                        <div class="info-content">
+                            <label>Adresse</label>
+                            <p>{{ contactInfo.address }}</p>
+                        </div>
+                    </div>
+
+                    <div class="info-item">
+                        <div class="info-icon">
+                            <i class="bi bi-clock-fill"></i>
+                        </div>
+                        <div class="info-content">
+                            <label>Horaires</label>
+                            <p>{{ contactInfo.hours }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div class="info-card">
+                    <h3>
+                        <i class="bi bi-link-45deg me-2"></i>
+                        Liens Rapides
+                    </h3>
+
+                    <div class="quick-links">
+                        <a routerLink="/catalogue" class="quick-link">
+                            <i class="bi bi-shop"></i>
+                            <span>Voir le catalogue</span>
+                            <i class="bi bi-chevron-right"></i>
+                        </a>
+                        <a routerLink="/service-it" class="quick-link">
+                            <i class="bi bi-tools"></i>
+                            <span>Nos services</span>
+                            <i class="bi bi-chevron-right"></i>
+                        </a>
+                        <a routerLink="/profil" class="quick-link">
+                            <i class="bi bi-person-circle"></i>
+                            <span>Mon compte</span>
+                            <i class="bi bi-chevron-right"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Social Media -->
+                <div class="info-card">
+                    <h3>
+                        <i class="bi bi-share me-2"></i>
+                        Suivez-nous
+                    </h3>
+
+                    <div class="social-links">
+                        <a href="#" class="social-link facebook" title="Facebook">
+                            <i class="bi bi-facebook"></i>
+                        </a>
+                        <a href="#" class="social-link twitter" title="Twitter">
+                            <i class="bi bi-twitter"></i>
+                        </a>
+                        <a href="#" class="social-link linkedin" title="LinkedIn">
+                            <i class="bi bi-linkedin"></i>
+                        </a>
+                        <a href="#" class="social-link instagram" title="Instagram">
+                            <i class="bi bi-instagram"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

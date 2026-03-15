@@ -1,0 +1,346 @@
+<!-- Hero Section -->
+<section class="projets-hero">
+    <div class="hero-overlay"></div>
+    <div class="container">
+        <div class="hero-content">
+            <span class="hero-badge"><i class="bi bi-grid-3x3-gap-fill me-2"></i>Portfolio</span>
+            <h1 class="hero-title">Nos Projets Réalisés</h1>
+            <p class="hero-subtitle">Découvrez nos réalisations concrètes qui témoignent de notre expertise et de notre engagement envers l'excellence technologique</p>
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <span class="stat-number">50+</span>
+                    <span class="stat-label">Projets Livrés</span>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat-item">
+                    <span class="stat-number">100%</span>
+                    <span class="stat-label">Clients Satisfaits</span>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat-item">
+                    <span class="stat-number">10+</span>
+                    <span class="stat-label">Années d'Expérience</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Filter Tabs -->
+<section class="filter-section">
+    <div class="container">
+        <div class="filter-tabs">
+            <button class="filter-btn" (click)="setFilter('all')" [class.active]="activeFilter === 'all'">
+                <i class="bi bi-grid me-2"></i>Tous les Projets
+            </button>
+            <button class="filter-btn" (click)="setFilter('web')" [class.active]="activeFilter === 'web'">
+                <i class="bi bi-code-slash me-2"></i>Développement Web
+            </button>
+            <button class="filter-btn" (click)="setFilter('reseau')" [class.active]="activeFilter === 'reseau'">
+                <i class="bi bi-diagram-3 me-2"></i>Réseaux & Sécurité
+            </button>
+            <button class="filter-btn" (click)="setFilter('cloud')" [class.active]="activeFilter === 'cloud'">
+                <i class="bi bi-cloud me-2"></i>Cloud & Infra
+            </button>
+            <button class="filter-btn" (click)="setFilter('pos')" [class.active]="activeFilter === 'pos'">
+                <i class="bi bi-shop me-2"></i>Point de Vente
+            </button>
+        </div>
+    </div>
+</section>
+
+<!-- Projects Grid -->
+<section class="projets-grid-section">
+    <div class="container">
+        <div class="row g-4">
+
+            <!-- Projet 1 -->
+            <div class="col-lg-4 col-md-6" *ngIf="activeFilter === 'all' || activeFilter === 'web'">
+                <div class="projet-card">
+                    <div class="projet-image-wrapper">
+                        <div class="projet-image-placeholder web">
+                            <i class="bi bi-code-slash"></i>
+                        </div>
+                        <div class="projet-overlay">
+                            <div class="overlay-actions">
+                                <a routerLink="/devis-contact" class="overlay-btn">
+                                    <i class="bi bi-envelope-fill"></i> Nous Contacter
+                                </a>
+                            </div>
+                        </div>
+                        <span class="projet-category-badge web">Développement Web</span>
+                    </div>
+                    <div class="projet-card-body">
+                        <div class="projet-meta">
+                            <span class="projet-date"><i class="bi bi-calendar3 me-1"></i>2024</span>
+                            <span class="projet-client"><i class="bi bi-building me-1"></i>Secteur Commerce</span>
+                        </div>
+                        <h3 class="projet-title">Plateforme E-Commerce B2B</h3>
+                        <p class="projet-description">Développement d'une plateforme de vente en ligne complète avec gestion des commandes, facturation automatisée et tableau de bord analytique en temps réel.</p>
+                        <div class="projet-tags">
+                            <span class="tag">Angular</span>
+                            <span class="tag">Node.js</span>
+                            <span class="tag">PostgreSQL</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Projet 2 -->
+            <div class="col-lg-4 col-md-6" *ngIf="activeFilter === 'all' || activeFilter === 'reseau'">
+                <div class="projet-card">
+                    <div class="projet-image-wrapper">
+                        <div class="projet-image-placeholder reseau">
+                            <i class="bi bi-shield-lock-fill"></i>
+                        </div>
+                        <div class="projet-overlay">
+                            <div class="overlay-actions">
+                                <a routerLink="/devis-contact" class="overlay-btn">
+                                    <i class="bi bi-envelope-fill"></i> Nous Contacter
+                                </a>
+                            </div>
+                        </div>
+                        <span class="projet-category-badge reseau">Réseaux & Sécurité</span>
+                    </div>
+                    <div class="projet-card-body">
+                        <div class="projet-meta">
+                            <span class="projet-date"><i class="bi bi-calendar3 me-1"></i>2024</span>
+                            <span class="projet-client"><i class="bi bi-building me-1"></i>Secteur Santé</span>
+                        </div>
+                        <h3 class="projet-title">Infrastructure Réseau Sécurisée</h3>
+                        <p class="projet-description">Mise en place d'une infrastructure réseau hautement sécurisée pour un complexe médical, incluant pare-feu avancé, VPN et système de surveillance continue.</p>
+                        <div class="projet-tags">
+                            <span class="tag">Cisco</span>
+                            <span class="tag">Firewall</span>
+                            <span class="tag">VPN</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Projet 3 -->
+            <div class="col-lg-4 col-md-6" *ngIf="activeFilter === 'all' || activeFilter === 'pos'">
+                <div class="projet-card">
+                    <div class="projet-image-wrapper">
+                        <div class="projet-image-placeholder pos">
+                            <i class="bi bi-cart4"></i>
+                        </div>
+                        <div class="projet-overlay">
+                            <div class="overlay-actions">
+                                <a routerLink="/devis-contact" class="overlay-btn">
+                                    <i class="bi bi-envelope-fill"></i> Nous Contacter
+                                </a>
+                            </div>
+                        </div>
+                        <span class="projet-category-badge pos">Point de Vente</span>
+                    </div>
+                    <div class="projet-card-body">
+                        <div class="projet-meta">
+                            <span class="projet-date"><i class="bi bi-calendar3 me-1"></i>2023</span>
+                            <span class="projet-client"><i class="bi bi-building me-1"></i>Grande Distribution</span>
+                        </div>
+                        <h3 class="projet-title">Système POS Multi-Caisses</h3>
+                        <p class="projet-description">Déploiement d'un système de point de vente complet pour une chaîne de supermarchés avec gestion des stocks, fidélisation client et rapports en temps réel.</p>
+                        <div class="projet-tags">
+                            <span class="tag">POS</span>
+                            <span class="tag">Gestion Stock</span>
+                            <span class="tag">CRM</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Projet 4 -->
+            <div class="col-lg-4 col-md-6" *ngIf="activeFilter === 'all' || activeFilter === 'cloud'">
+                <div class="projet-card">
+                    <div class="projet-image-wrapper">
+                        <div class="projet-image-placeholder cloud">
+                            <i class="bi bi-cloud-arrow-up-fill"></i>
+                        </div>
+                        <div class="projet-overlay">
+                            <div class="overlay-actions">
+                                <a routerLink="/devis-contact" class="overlay-btn">
+                                    <i class="bi bi-envelope-fill"></i> Nous Contacter
+                                </a>
+                            </div>
+                        </div>
+                        <span class="projet-category-badge cloud">Cloud & Infra</span>
+                    </div>
+                    <div class="projet-card-body">
+                        <div class="projet-meta">
+                            <span class="projet-date"><i class="bi bi-calendar3 me-1"></i>2024</span>
+                            <span class="projet-client"><i class="bi bi-building me-1"></i>Secteur Éducation</span>
+                        </div>
+                        <h3 class="projet-title">Migration Cloud Complète</h3>
+                        <p class="projet-description">Migration intégrale de l'infrastructure d'un établissement scolaire vers le cloud avec mise en place de solutions de collaboration, sauvegarde automatique et sécurité renforcée.</p>
+                        <div class="projet-tags">
+                            <span class="tag">AWS</span>
+                            <span class="tag">Microsoft 365</span>
+                            <span class="tag">Backup</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Projet 5 -->
+            <div class="col-lg-4 col-md-6" *ngIf="activeFilter === 'all' || activeFilter === 'web'">
+                <div class="projet-card">
+                    <div class="projet-image-wrapper">
+                        <div class="projet-image-placeholder web">
+                            <i class="bi bi-bar-chart-fill"></i>
+                        </div>
+                        <div class="projet-overlay">
+                            <div class="overlay-actions">
+                                <a routerLink="/devis-contact" class="overlay-btn">
+                                    <i class="bi bi-envelope-fill"></i> Nous Contacter
+                                </a>
+                            </div>
+                        </div>
+                        <span class="projet-category-badge web">Développement Web</span>
+                    </div>
+                    <div class="projet-card-body">
+                        <div class="projet-meta">
+                            <span class="projet-date"><i class="bi bi-calendar3 me-1"></i>2023</span>
+                            <span class="projet-client"><i class="bi bi-building me-1"></i>Secteur Finance</span>
+                        </div>
+                        <h3 class="projet-title">Tableau de Bord ERP</h3>
+                        <p class="projet-description">Développement d'un ERP sur mesure pour une société financière avec modules de comptabilité, RH, gestion de projets et reporting avancé multi-devises.</p>
+                        <div class="projet-tags">
+                            <span class="tag">ERP</span>
+                            <span class="tag">React</span>
+                            <span class="tag">Python</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Projet 6 -->
+            <div class="col-lg-4 col-md-6" *ngIf="activeFilter === 'all' || activeFilter === 'reseau'">
+                <div class="projet-card">
+                    <div class="projet-image-wrapper">
+                        <div class="projet-image-placeholder reseau">
+                            <i class="bi bi-camera-video-fill"></i>
+                        </div>
+                        <div class="projet-overlay">
+                            <div class="overlay-actions">
+                                <a routerLink="/devis-contact" class="overlay-btn">
+                                    <i class="bi bi-envelope-fill"></i> Nous Contacter
+                                </a>
+                            </div>
+                        </div>
+                        <span class="projet-category-badge reseau">Réseaux & Sécurité</span>
+                    </div>
+                    <div class="projet-card-body">
+                        <div class="projet-meta">
+                            <span class="projet-date"><i class="bi bi-calendar3 me-1"></i>2023</span>
+                            <span class="projet-client"><i class="bi bi-building me-1"></i>Secteur Industriel</span>
+                        </div>
+                        <h3 class="projet-title">Système de Vidéosurveillance IP</h3>
+                        <p class="projet-description">Installation d'un système de vidéosurveillance IP haute définition pour un complexe industriel, avec gestion centralisée, alertes intelligentes et accès mobile sécurisé.</p>
+                        <div class="projet-tags">
+                            <span class="tag">IP Cameras</span>
+                            <span class="tag">NVR</span>
+                            <span class="tag">IoT</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials Section -->
+<section class="testimonials-section">
+    <div class="container">
+        <div class="section-header-center">
+            <h2 class="section-title-white">Ce Que Disent Nos Clients</h2>
+            <p class="section-subtitle-white">La satisfaction de nos clients est notre plus grande fierté</p>
+        </div>
+        <div class="row g-4">
+            <div class="col-lg-4 col-md-6">
+                <div class="testimonial-card">
+                    <div class="testimonial-stars">
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                    </div>
+                    <p class="testimonial-text">"Intelligtech a transformé notre infrastructure IT. Le projet a été livré dans les délais avec une qualité irréprochable. Une équipe vraiment professionnelle !"</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar web">
+                            <i class="bi bi-person-fill"></i>
+                        </div>
+                        <div class="author-info">
+                            <strong>Mohammed A.</strong>
+                            <span>Directeur Technique, Casablanca</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="testimonial-card">
+                    <div class="testimonial-stars">
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                    </div>
+                    <p class="testimonial-text">"Notre système POS fonctionne parfaitement depuis l'installation. Le support est réactif et l'équipe toujours disponible. Je recommande vivement Intelligtech."</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar pos">
+                            <i class="bi bi-person-fill"></i>
+                        </div>
+                        <div class="author-info">
+                            <strong>Fatima Z.</strong>
+                            <span>Gérante, Chaîne de Commerces</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="testimonial-card">
+                    <div class="testimonial-stars">
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-fill"></i>
+                        <i class="bi bi-star-half"></i>
+                    </div>
+                    <p class="testimonial-text">"La migration cloud s'est déroulée sans aucune interruption d'activité. Une expertise remarquable et un accompagnement de qualité tout au long du projet."</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar cloud">
+                            <i class="bi bi-person-fill"></i>
+                        </div>
+                        <div class="author-info">
+                            <strong>Youssef K.</strong>
+                            <span>DSI, Établissement Éducatif</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="projets-cta">
+    <div class="container">
+        <div class="cta-content">
+            <h2 class="cta-title">Votre Projet, Notre Expertise</h2>
+            <p class="cta-text">Confiez-nous votre prochain projet et bénéficiez de notre savoir-faire pour des solutions sur mesure adaptées à vos besoins</p>
+            <div class="cta-buttons">
+                <a routerLink="/devis-contact" class="btn-cta-primary">
+                    <i class="bi bi-send-fill me-2"></i>
+                    Démarrer un Projet
+                </a>
+                <a routerLink="/service-it" class="btn-cta-secondary">
+                    <i class="bi bi-gear-fill me-2"></i>
+                    Nos Services
+                </a>
+            </div>
+        </div>
+    </div>
+</section>

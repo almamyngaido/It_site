@@ -1,5 +1,11 @@
 /* You can add global styles to this file, and also import other style files */
 
+:root {
+    --primary-color: #226eb1;
+    --secondary-color: #000000;
+    --light-color: #ffffff;
+}
+
 body {
     font-family: 'Lato', sans-serif;
 }
@@ -72,4 +78,21 @@ a {
 }
 
 html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+body {
+    margin: 0;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+    padding-top: 110px;
+}
+
+/* Responsive padding for fixed header */
+@media (max-width: 991px) {
+    body {
+        padding-top: 100px;
+    }
+}
+
+@media (max-width: 767px) {
+    body {
+        padding-top: 95px;
+    }
+}

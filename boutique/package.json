@@ -24,7 +24,9 @@
     "bootstrap": "^5.2.3",
     "bootstrap-icons": "^1.10.3",
     "chart.js": "^4.4.1",
+    "ngx-toastr": "^17.0.2",
     "rxjs": "~7.8.0",
+    "sweetalert2": "^11.26.10",
     "tslib": "^2.3.0",
     "zone.js": "~0.12.0"
   },

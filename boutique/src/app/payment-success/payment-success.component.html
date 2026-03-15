@@ -1,0 +1,125 @@
+<div class="payment-page">
+    <div class="container">
+        <div class="payment-card">
+            <!-- Loading State -->
+            <div *ngIf="isLoading" class="loading-state">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Chargement...</span>
+                </div>
+                <p class="mt-3">Vérification du paiement...</p>
+            </div>
+
+            <!-- Error State -->
+            <div *ngIf="error && !isLoading" class="error-state">
+                <div class="icon-container error">
+                    <i class="bi bi-x-circle"></i>
+                </div>
+                <h2>Erreur</h2>
+                <p class="error-message">{{ error }}</p>
+                <div class="actions">
+                    <button class="btn btn-primary" (click)="goHome()">
+                        <i class="bi bi-house me-2"></i>
+                        Retour à l'accueil
+                    </button>
+                </div>
+            </div>
+
+            <!-- Success State -->
+            <div *ngIf="transaction && !isLoading && transaction.status === 'completed'" class="success-state">
+                <div class="icon-container success">
+                    <i class="bi bi-check-circle"></i>
+                </div>
+                <h2>Paiement réussi!</h2>
+                <p class="success-message">
+                    Votre commande a été payée avec succès et sera traitée dans les plus brefs délais.
+                </p>
+
+                <!-- Transaction Details -->
+                <div class="transaction-details">
+                    <div class="detail-row">
+                        <span class="label">Montant:</span>
+                        <span class="value">{{ transaction.amount }} {{ transaction.currency || 'XOF' }}</span>
+                    </div>
+                    <div class="detail-row" *ngIf="transaction.paydunyaTransactionId">
+                        <span class="label">ID Transaction:</span>
+                        <span class="value">{{ transaction.paydunyaTransactionId }}</span>
+                    </div>
+                    <div class="detail-row" *ngIf="transaction.createdAt">
+                        <span class="label">Date:</span>
+                        <span class="value">{{ transaction.createdAt | date:'short' }}</span>
+                    </div>
+                </div>
+
+                <div class="actions">
+                    <button class="btn btn-primary" (click)="viewOrders()">
+                        <i class="bi bi-box-seam me-2"></i>
+                        Voir mes commandes
+                    </button>
+                    <button class="btn btn-outline-primary" (click)="continueShopping()">
+                        <i class="bi bi-bag me-2"></i>
+                        Continuer mes achats
+                    </button>
+                </div>
+            </div>
+
+            <!-- Pending State -->
+            <div *ngIf="transaction && !isLoading && transaction.status === 'pending'" class="pending-state">
+                <div class="icon-container pending">
+                    <i class="bi bi-clock-history"></i>
+                </div>
+                <h2>Paiement en cours</h2>
+                <p class="pending-message">
+                    Votre paiement est en cours de traitement. Nous vous tiendrons informé par email.
+                </p>
+
+                <!-- Transaction Details -->
+                <div class="transaction-details">
+                    <div class="detail-row">
+                        <span class="label">Montant:</span>
+                        <span class="value">{{ transaction.amount }} {{ transaction.currency || 'XOF' }}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="label">Statut:</span>
+                        <span class="value">En attente</span>
+                    </div>
+                </div>
+
+                <div class="actions">
+                    <button class="btn btn-primary" (click)="goHome()">
+                        <i class="bi bi-house me-2"></i>
+                        Retour à l'accueil
+                    </button>
+                    <button class="btn btn-outline-primary" (click)="continueShopping()">
+                        <i class="bi bi-bag me-2"></i>
+                        Continuer mes achats
+                    </button>
+                </div>
+            </div>
+
+            <!-- Failed State -->
+            <div *ngIf="transaction && !isLoading && transaction.status === 'failed'" class="failed-state">
+                <div class="icon-container error">
+                    <i class="bi bi-exclamation-triangle"></i>
+                </div>
+                <h2>Paiement échoué</h2>
+                <p class="error-message">
+                    Le paiement n'a pas pu être traité. Veuillez réessayer.
+                </p>
+                <p class="failure-reason" *ngIf="transaction.failureReason">
+                    Raison: {{ transaction.failureReason }}
+                </p>
+
+                <div class="actions">
+                    <button class="btn btn-primary" (click)="goHome()">
+                        <i class="bi bi-house me-2"></i>
+                        Retour à l'accueil
+                    </button>
+                    <button class="btn btn-outline-primary" (click)="continueShopping()">
+                        <i class="bi bi-bag me-2"></i>
+                        Réessayer
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

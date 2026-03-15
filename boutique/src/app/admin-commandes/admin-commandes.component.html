@@ -1,0 +1,228 @@
+<div class="admin-container">
+
+  <!-- Header -->
+  <div class="admin-header">
+    <div>
+      <h1><i class="bi bi-bag-check me-2"></i>Gestion des Commandes</h1>
+      <p class="subtitle">{{ filteredOrders.length }} commande(s) affichée(s)</p>
+    </div>
+    <button class="btn btn-outline-primary" (click)="loadOrders()">
+      <i class="bi bi-arrow-clockwise me-1"></i> Actualiser
+    </button>
+  </div>
+
+  <!-- Alerts -->
+  <div class="alert alert-success" *ngIf="successMessage">
+    <i class="bi bi-check-circle me-2"></i>{{ successMessage }}
+  </div>
+  <div class="alert alert-danger" *ngIf="error">
+    <i class="bi bi-exclamation-triangle me-2"></i>{{ error }}
+  </div>
+
+  <!-- Filters -->
+  <div class="filters-bar">
+    <div class="search-box">
+      <i class="bi bi-search"></i>
+      <input type="text" placeholder="N° commande, email, nom client..."
+             [(ngModel)]="searchQuery" (input)="applyFilters()">
+    </div>
+
+    <select [(ngModel)]="filterStatus" (change)="applyFilters()" class="filter-select">
+      <option value="">Tous les statuts</option>
+      <option value="pending">En attente</option>
+      <option value="confirmed">Confirmée</option>
+      <option value="processing">En cours</option>
+      <option value="shipped">Expédiée</option>
+      <option value="delivered">Livrée</option>
+      <option value="cancelled">Annulée</option>
+    </select>
+
+    <select [(ngModel)]="filterPayment" (change)="applyFilters()" class="filter-select">
+      <option value="">Tous paiements</option>
+      <option value="pending">En attente</option>
+      <option value="paid">Payée</option>
+      <option value="failed">Échoué</option>
+      <option value="refunded">Remboursée</option>
+    </select>
+  </div>
+
+  <!-- Loading -->
+  <div class="loading-state" *ngIf="isLoading">
+    <div class="spinner-border text-primary"></div>
+    <p>Chargement des commandes...</p>
+  </div>
+
+  <!-- Empty state -->
+  <div class="empty-state" *ngIf="!isLoading && filteredOrders.length === 0">
+    <i class="bi bi-bag-x"></i>
+    <p>Aucune commande trouvée</p>
+  </div>
+
+  <!-- Orders Table -->
+  <div class="orders-table-wrapper" *ngIf="!isLoading && filteredOrders.length > 0">
+    <table class="orders-table">
+      <thead>
+        <tr>
+          <th>N° Commande</th>
+          <th>Client</th>
+          <th>Date</th>
+          <th>Articles</th>
+          <th>Total</th>
+          <th>Statut</th>
+          <th>Paiement</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngFor="let order of filteredOrders">
+          <!-- Main row -->
+          <tr [class.row-expanded]="selectedOrder?.id === order.id" (click)="selectOrder(order)" class="order-row">
+            <td>
+              <span class="order-number">{{ order.orderNumber }}</span>
+              <span class="guest-badge" *ngIf="isGuest(order)">
+                <i class="bi bi-person-fill-dash"></i> invité
+              </span>
+            </td>
+            <td>
+              <div class="customer-info">
+                <span class="customer-name">{{ getCustomerName(order) }}</span>
+                <span class="customer-email">{{ getCustomerEmail(order) }}</span>
+              </div>
+            </td>
+            <td class="date-cell">{{ formatDate(order.createdAt) }}</td>
+            <td class="center">{{ getItemCount(order) }}</td>
+            <td class="total-cell">{{ getOrderTotal(order) }}</td>
+            <td>
+              <span class="badge" [ngClass]="getStatusClass(order.statud)">
+                {{ getStatusLabel(order.statud) }}
+              </span>
+            </td>
+            <td>
+              <span class="badge" [ngClass]="getPaymentClass(order.paymentStatus)">
+                {{ getPaymentLabel(order.paymentStatus) }}
+              </span>
+            </td>
+            <td (click)="$event.stopPropagation()">
+              <div class="action-btns">
+                <button class="btn-icon" title="Voir détails" (click)="selectOrder(order)">
+                  <i class="bi bi-eye"></i>
+                </button>
+                <button class="btn-icon btn-edit" title="Modifier statut" (click)="openStatusModal(order)">
+                  <i class="bi bi-pencil"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+
+          <!-- Expanded detail row -->
+          <tr *ngIf="selectedOrder?.id === order.id" class="detail-row">
+            <td colspan="8">
+              <div class="order-detail">
+                <div class="detail-grid">
+
+                  <!-- Customer block -->
+                  <div class="detail-block">
+                    <h4><i class="bi bi-person me-2"></i>Client</h4>
+                    <p><strong>Nom :</strong> {{ getCustomerName(order) }}</p>
+                    <p><strong>Email :</strong> {{ getCustomerEmail(order) }}</p>
+                    <p><strong>Téléphone :</strong> {{ getCustomerPhone(order) }}</p>
+                    <p *ngIf="order.userId"><strong>ID compte :</strong> {{ order.userId }}</p>
+                  </div>
+
+                  <!-- Order info block -->
+                  <div class="detail-block">
+                    <h4><i class="bi bi-info-circle me-2"></i>Commande</h4>
+                    <p><strong>N° :</strong> {{ order.orderNumber }}</p>
+                    <p><strong>Date :</strong> {{ formatDate(order.createdAt) }}</p>
+                    <p><strong>Méthode paiement :</strong> {{ order.paymentMethod ?? '—' }}</p>
+                    <p *ngIf="order.shippingCost !== undefined">
+                      <strong>Livraison :</strong> {{ order.shippingCost === 0 ? 'Gratuite' : (order.shippingCost | number) + ' FCFA' }}
+                    </p>
+                  </div>
+
+                  <!-- Totals block -->
+                  <div class="detail-block">
+                    <h4><i class="bi bi-receipt me-2"></i>Montants</h4>
+                    <p><strong>Sous-total :</strong> {{ (order.subtotal ?? 0) | number }} FCFA</p>
+                    <p><strong>TVA :</strong> {{ (order.tax ?? 0) | number }} FCFA</p>
+                    <p><strong>Livraison :</strong> {{ (order.shippingCost ?? 0) | number }} FCFA</p>
+                    <p class="total-line"><strong>Total :</strong> {{ (order.total ?? 0) | number }} FCFA</p>
+                  </div>
+
+                </div>
+
+                <!-- Order items -->
+                <div class="items-block" *ngIf="order.orderItems && order.orderItems.length > 0">
+                  <h4><i class="bi bi-box-seam me-2"></i>Articles</h4>
+                  <table class="items-table">
+                    <thead>
+                      <tr>
+                        <th>Produit</th>
+                        <th>SKU</th>
+                        <th>Qté</th>
+                        <th>Prix unitaire</th>
+                        <th>Total</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let item of order.orderItems">
+                        <td>{{ item.productName }}</td>
+                        <td class="sku">{{ item.productSku }}</td>
+                        <td class="center">{{ item.quantity }}</td>
+                        <td>{{ item.unitPrice | number }} FCFA</td>
+                        <td>{{ item.total | number }} FCFA</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <div class="no-items" *ngIf="!order.orderItems || order.orderItems.length === 0">
+                  <i class="bi bi-inbox"></i> Aucun article enregistré
+                </div>
+
+              </div>
+            </td>
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Status Update Modal -->
+<div class="modal-overlay" *ngIf="showStatusModal" (click)="closeStatusModal()">
+  <div class="modal-card" (click)="$event.stopPropagation()">
+    <div class="modal-head">
+      <h3><i class="bi bi-pencil-square me-2"></i>Modifier le statut</h3>
+      <button class="close-btn" (click)="closeStatusModal()"><i class="bi bi-x-lg"></i></button>
+    </div>
+
+    <div class="modal-body">
+      <div class="mb-4">
+        <label class="form-label">Statut commande</label>
+        <select class="form-control" [(ngModel)]="newStatus">
+          <option *ngFor="let s of orderStatuses" [value]="s">{{ getStatusLabel(s) }}</option>
+        </select>
+      </div>
+
+      <div class="mb-4">
+        <label class="form-label">Statut paiement</label>
+        <select class="form-control" [(ngModel)]="newPaymentStatus">
+          <option *ngFor="let s of paymentStatuses" [value]="s">{{ getPaymentLabel(s) }}</option>
+        </select>
+      </div>
+
+      <div class="preview-badges">
+        <span class="badge" [ngClass]="getStatusClass(newStatus)">{{ getStatusLabel(newStatus) }}</span>
+        <span class="badge ms-2" [ngClass]="getPaymentClass(newPaymentStatus)">{{ getPaymentLabel(newPaymentStatus) }}</span>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-outline-secondary" (click)="closeStatusModal()">Annuler</button>
+      <button class="btn btn-primary" (click)="saveStatus()">
+        <i class="bi bi-check-lg me-1"></i> Enregistrer
+      </button>
+    </div>
+  </div>
+</div>

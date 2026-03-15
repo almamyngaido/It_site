@@ -1,0 +1,238 @@
+<div class="admin-container">
+
+  <!-- Header -->
+  <div class="admin-header">
+    <div>
+      <h1><i class="bi bi-speedometer2 me-2"></i>Tableau de Bord</h1>
+      <p class="subtitle" *ngIf="stats">
+        Mis à jour le {{ stats.generatedAt | date:'dd/MM/yyyy HH:mm' }}
+      </p>
+    </div>
+    <button class="btn btn-outline-primary" (click)="loadStats()" [disabled]="isLoading">
+      <i class="bi bi-arrow-clockwise me-1"></i> Actualiser
+    </button>
+  </div>
+
+  <!-- Error -->
+  <div class="alert alert-danger" *ngIf="error">
+    <i class="bi bi-exclamation-triangle me-2"></i>{{ error }}
+  </div>
+
+  <!-- Loading skeleton -->
+  <div class="loading-state" *ngIf="isLoading">
+    <div class="spinner-border text-primary" role="status"></div>
+    <p>Chargement des statistiques…</p>
+  </div>
+
+  <ng-container *ngIf="stats && !isLoading">
+
+    <!-- ── Row 1 : Main KPIs ── -->
+    <div class="row g-3 mb-3">
+
+      <!-- Revenue -->
+      <div class="col-sm-6 col-xl-3">
+        <div class="kpi-card kpi-revenue">
+          <div class="kpi-icon"><i class="bi bi-currency-exchange"></i></div>
+          <div class="kpi-body">
+            <div class="kpi-value">{{ formatCurrency(stats.revenue.total) }}</div>
+            <div class="kpi-label">Chiffre d'affaires</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Orders -->
+      <div class="col-sm-6 col-xl-3">
+        <div class="kpi-card kpi-orders">
+          <div class="kpi-icon"><i class="bi bi-bag-check"></i></div>
+          <div class="kpi-body">
+            <div class="kpi-value">{{ stats.orders.total }}</div>
+            <div class="kpi-label">Commandes totales</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Users -->
+      <div class="col-sm-6 col-xl-3">
+        <div class="kpi-card kpi-users">
+          <div class="kpi-icon"><i class="bi bi-people"></i></div>
+          <div class="kpi-body">
+            <div class="kpi-value">{{ stats.users.total }}</div>
+            <div class="kpi-label">Clients inscrits</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Products -->
+      <div class="col-sm-6 col-xl-3">
+        <div class="kpi-card kpi-products">
+          <div class="kpi-icon"><i class="bi bi-box-seam"></i></div>
+          <div class="kpi-body">
+            <div class="kpi-value">{{ stats.products.total }}</div>
+            <div class="kpi-label">Produits en catalogue</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ── Row 2 : Secondary stats ── -->
+    <div class="row g-3 mb-4">
+
+      <div class="col-sm-6 col-lg-3">
+        <div class="stat-card">
+          <span class="stat-icon text-warning"><i class="bi bi-hourglass-split"></i></span>
+          <div>
+            <div class="stat-value">{{ stats.orders.pending }}</div>
+            <div class="stat-label">Commandes en attente</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-sm-6 col-lg-3">
+        <div class="stat-card">
+          <span class="stat-icon text-success"><i class="bi bi-check-circle"></i></span>
+          <div>
+            <div class="stat-value">{{ stats.orders.completed }}</div>
+            <div class="stat-label">Commandes terminées</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-sm-6 col-lg-3">
+        <div class="stat-card">
+          <span class="stat-icon text-danger"><i class="bi bi-exclamation-triangle"></i></span>
+          <div>
+            <div class="stat-value">{{ stats.products.lowStock + stats.products.outOfStock }}</div>
+            <div class="stat-label">Produits stock faible / épuisé</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-sm-6 col-lg-3">
+        <div class="stat-card">
+          <span class="stat-icon text-info"><i class="bi bi-person-plus"></i></span>
+          <div>
+            <div class="stat-value">{{ stats.users.newThisMonth }}</div>
+            <div class="stat-label">Nouveaux clients ce mois</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ── Row 3 : Chart + Order breakdown ── -->
+    <div class="row g-3 mb-4">
+
+      <!-- Revenue chart -->
+      <div class="col-lg-8">
+        <div class="panel">
+          <div class="panel-header">
+            <h2 class="panel-title"><i class="bi bi-bar-chart-line me-2"></i>Revenus — 12 derniers mois</h2>
+          </div>
+          <div class="chart-wrapper">
+            <canvas #revenueChart></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Order breakdown -->
+      <div class="col-lg-4">
+        <div class="panel h-100">
+          <div class="panel-header">
+            <h2 class="panel-title"><i class="bi bi-pie-chart me-2"></i>Statuts commandes</h2>
+          </div>
+          <ul class="status-list">
+            <li class="status-item">
+              <span class="status-dot dot-warning"></span>
+              <span class="status-name">En attente</span>
+              <span class="status-count">{{ stats.orders.pending }}</span>
+            </li>
+            <li class="status-item">
+              <span class="status-dot dot-info"></span>
+              <span class="status-name">En cours</span>
+              <span class="status-count">{{ stats.orders.processing }}</span>
+            </li>
+            <li class="status-item">
+              <span class="status-dot dot-success"></span>
+              <span class="status-name">Terminées</span>
+              <span class="status-count">{{ stats.orders.completed }}</span>
+            </li>
+            <li class="status-item">
+              <span class="status-dot dot-danger"></span>
+              <span class="status-name">Annulées</span>
+              <span class="status-count">{{ stats.orders.cancelled }}</span>
+            </li>
+          </ul>
+
+          <hr class="my-3">
+
+          <div class="mini-stat">
+            <span>Taux de succès</span>
+            <strong>{{ getOrderSuccessRate() }}%</strong>
+          </div>
+          <div class="progress mb-3" style="height:6px">
+            <div class="progress-bar bg-success" [style.width.%]="getOrderSuccessRate()"></div>
+          </div>
+
+          <div class="mini-stat">
+            <span>Paiements réussis</span>
+            <strong>{{ getTransactionSuccessRate() }}%</strong>
+          </div>
+          <div class="progress" style="height:6px">
+            <div class="progress-bar" style="background:#1e3a5f" [style.width.%]="getTransactionSuccessRate()"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ── Row 4 : Recent orders ── -->
+    <div class="panel">
+      <div class="panel-header">
+        <h2 class="panel-title"><i class="bi bi-clock-history me-2"></i>Dernières commandes</h2>
+        <a routerLink="/admin/commandes" class="btn btn-sm btn-outline-primary">Voir tout</a>
+      </div>
+
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+          <thead>
+            <tr>
+              <th>N° Commande</th>
+              <th>Client</th>
+              <th>Montant</th>
+              <th>Statut</th>
+              <th>Paiement</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let order of stats.recentOrders">
+              <td class="fw-semibold">{{ order.orderNumber }}</td>
+              <td>
+                <span *ngIf="order.isGuest">{{ order.guestName || order.guestEmail }}</span>
+                <span *ngIf="!order.isGuest">Membre</span>
+              </td>
+              <td>{{ formatCurrency(order.total) }}</td>
+              <td>
+                <span class="badge" [ngClass]="getOrderStatusClass(order.statud)">
+                  {{ getOrderStatusLabel(order.statud) }}
+                </span>
+              </td>
+              <td>
+                <span class="badge" [ngClass]="getPaymentStatusClass(order.paymentStatus)">
+                  {{ getPaymentStatusLabel(order.paymentStatus) }}
+                </span>
+              </td>
+              <td class="text-muted small">{{ order.createdAt | date:'dd/MM/yyyy' }}</td>
+            </tr>
+            <tr *ngIf="stats.recentOrders.length === 0">
+              <td colspan="6" class="text-center text-muted py-3">Aucune commande récente</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </ng-container>
+
+</div>

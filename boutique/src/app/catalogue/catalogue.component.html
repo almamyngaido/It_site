@@ -1,0 +1,270 @@
+<div class="catalogue-page">
+    <div class="container">
+        <!-- Page Header -->
+        <div class="page-header">
+            <div>
+                <h1 class="page-title">Catalogue de Produits</h1>
+                <p class="page-subtitle">Parcourez notre sélection de matériel et services de qualité.</p>
+            </div>
+            <div class="search-box">
+                <i class="bi bi-search"></i>
+                <input
+                    type="text"
+                    placeholder="Rechercher des produits..."
+                    (input)="onSearch($event)"
+                    [(ngModel)]="searchQuery"
+                    class="search-input">
+            </div>
+        </div>
+
+        <!-- Loading Indicator -->
+        <div class="loading-container" *ngIf="isLoading">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Chargement...</span>
+            </div>
+            <p class="mt-3">Chargement des produits...</p>
+        </div>
+
+        <!-- Error Message -->
+        <div class="alert alert-danger" *ngIf="error && !isLoading">
+            <i class="bi bi-exclamation-triangle me-2"></i>
+            {{ error }}
+            <button class="btn btn-sm btn-outline-danger ms-3" (click)="loadProducts()">
+                Réessayer
+            </button>
+        </div>
+
+        <!-- Main Content -->
+        <div class="row" *ngIf="!isLoading && !error">
+            <!-- Sidebar -->
+            <div class="col-lg-3">
+                <div class="sidebar">
+
+                    <!-- Filter Header -->
+                    <div class="filter-header">
+                        <div class="filter-header-left">
+                            <span class="filter-icon-wrap"><i class="bi bi-sliders2"></i></span>
+                            <h3 class="sidebar-title">Filtres</h3>
+                            <span class="active-filter-badge"
+                                *ngIf="(selectedCategory !== 'all' ? 1 : 0) + (showInStockOnly ? 1 : 0) + (showFeaturedOnly ? 1 : 0) > 0">
+                                {{ (selectedCategory !== 'all' ? 1 : 0) + (showInStockOnly ? 1 : 0) + (showFeaturedOnly ? 1 : 0) }}
+                            </span>
+                        </div>
+                        <button class="btn-reset" (click)="resetFilters()" title="Réinitialiser les filtres">
+                            <i class="bi bi-arrow-counterclockwise"></i>
+                            <span>Réinit.</span>
+                        </button>
+                    </div>
+
+                    <!-- Categories -->
+                    <div class="filter-section">
+                        <p class="filter-label"><i class="bi bi-grid-3x3-gap me-2"></i>Catégories</p>
+                        <div class="category-chips">
+                            <button
+                                *ngFor="let category of categories"
+                                class="chip"
+                                [class.chip-active]="selectedCategory === category.id"
+                                (click)="selectCategory(category.id)">
+                                {{ category.label }}
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="filter-divider"></div>
+
+                    <!-- Price Range -->
+                    <div class="filter-section">
+                        <p class="filter-label"><i class="bi bi-tag me-2"></i>Prix (FCFA)</p>
+                        <div class="price-inputs-row">
+                            <div class="price-field">
+                                <label class="price-field-label">Min</label>
+                                <div class="price-input-wrap">
+                                    <input
+                                        type="number"
+                                        [(ngModel)]="selectedPriceRange.min"
+                                        [min]="priceRange.min"
+                                        [max]="selectedPriceRange.max"
+                                        (change)="updatePriceRange()">
+                                    <span class="currency-tag">FCFA</span>
+                                </div>
+                            </div>
+                            <div class="price-dash">—</div>
+                            <div class="price-field">
+                                <label class="price-field-label">Max</label>
+                                <div class="price-input-wrap">
+                                    <input
+                                        type="number"
+                                        [(ngModel)]="selectedPriceRange.max"
+                                        [min]="selectedPriceRange.min"
+                                        [max]="priceRange.max"
+                                        (change)="updatePriceRange()">
+                                    <span class="currency-tag">FCFA</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="price-summary">
+                            <i class="bi bi-info-circle me-1"></i>
+                            {{ selectedPriceRange.min }} – {{ selectedPriceRange.max }} FCFA
+                        </div>
+                    </div>
+
+                    <div class="filter-divider"></div>
+
+                    <!-- Availability -->
+                    <div class="filter-section">
+                        <p class="filter-label"><i class="bi bi-box-seam me-2"></i>Disponibilité</p>
+                        <div class="toggle-row">
+                            <div class="toggle-info">
+                                <span class="toggle-name">En stock uniquement</span>
+                                <span class="toggle-desc">Masquer les ruptures</span>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="inStockOnly" [(ngModel)]="showInStockOnly" (change)="toggleInStockOnly()">
+                                <span class="toggle-track">
+                                    <span class="toggle-thumb"></span>
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="filter-divider"></div>
+
+                    <!-- Special -->
+                    <div class="filter-section">
+                        <p class="filter-label"><i class="bi bi-stars me-2"></i>Mise en avant</p>
+                        <div class="toggle-row">
+                            <div class="toggle-info">
+                                <span class="toggle-name">Produits en vedette</span>
+                                <span class="toggle-desc">Sélection du moment</span>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="featuredOnly" [(ngModel)]="showFeaturedOnly" (change)="toggleFeaturedOnly()">
+                                <span class="toggle-track">
+                                    <span class="toggle-thumb"></span>
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Products Grid -->
+            <div class="col-lg-9">
+                <!-- Results Info and Sort -->
+                <div class="results-header">
+                    <div class="results-info">
+                        <p>
+                            <strong>{{ filteredProducts.length }}</strong> résultat(s)
+                            <span *ngIf="filteredProducts.length > 0">
+                                ({{ (currentPage - 1) * itemsPerPage + 1 }} - {{ currentPage * itemsPerPage > filteredProducts.length ? filteredProducts.length : currentPage * itemsPerPage }})
+                            </span>
+                        </p>
+                    </div>
+                    <div class="sort-dropdown">
+                        <label for="sortBy">
+                            <i class="bi bi-sort-down me-2"></i>
+                            Trier par:
+                        </label>
+                        <select
+                            id="sortBy"
+                            class="form-select"
+                            [(ngModel)]="sortBy"
+                            (change)="changeSortOption(sortBy)">
+                            <option value="newest">Plus récent</option>
+                            <option value="price-asc">Prix: Croissant</option>
+                            <option value="price-desc">Prix: Décroissant</option>
+                            <option value="name-asc">Nom: A-Z</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row g-4">
+                    <div class="col-md-6 col-lg-4" *ngFor="let product of paginatedProducts; trackBy: trackByProductId">
+                        <div class="product-card">
+                            <div class="product-image">
+                                <img [src]="getProductImage(product)" [alt]="product.name" loading="lazy">
+                                <span class="stock-badge" *ngIf="isInStock(product)">En Stock</span>
+                                <span class="out-of-stock-badge" *ngIf="!isInStock(product)">Rupture de Stock</span>
+                                <span class="discount-badge" *ngIf="getDiscountPercentage(product)">
+                                    -{{ getDiscountPercentage(product) }}%
+                                </span>
+                            </div>
+                            <div class="product-info">
+                                <span class="product-category">
+                                    {{ (product.category?.name || 'PRODUIT').toUpperCase() }}
+                                </span>
+                                <h3 class="product-title">{{ product.name }}</h3>
+                                <p class="product-description">
+                                    {{ product.description || 'Aucune description disponible' }}
+                                </p>
+                                <div class="product-footer">
+                                    <div class="price-container">
+                                        <span class="product-price">{{ product.price.toFixed(2) }} FCFA</span>
+                                        <span class="compare-price" *ngIf="product.compareAtPrice && product.compareAtPrice > product.price">
+                                            {{ product.compareAtPrice.toFixed(2) }} FCFA
+                                        </span>
+                                    </div>
+                                    <button
+                                        class="btn btn-add-cart"
+                                        [disabled]="!isInStock(product)"
+                                        (click)="addToCart(product, $event)">
+                                        <i class="bi bi-cart-plus me-2"></i>
+                                        {{ isInStock(product) ? 'Ajouter' : 'Indisponible' }}
+                                    </button>
+                                </div>
+                                <div class="product-meta">
+                                    <span class="meta-item">
+                                        <i class="bi bi-box"></i>
+                                        SKU: {{ product.sku }}
+                                    </span>
+                                    <span class="meta-item">
+                                        <i class="bi bi-stack"></i>
+                                        Stock: {{ product.stockQuantity }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pagination Controls -->
+                <div class="pagination-container" *ngIf="filteredProducts.length > 0 && totalPages > 1">
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination justify-content-center">
+                            <!-- Previous Button -->
+                            <li class="page-item" [class.disabled]="currentPage === 1">
+                                <button class="page-link" (click)="previousPage()" [disabled]="currentPage === 1">
+                                    <i class="bi bi-chevron-left"></i>
+                                    Précédent
+                                </button>
+                            </li>
+
+                            <!-- Page Numbers -->
+                            <li class="page-item" *ngFor="let page of getPageNumbers()" [class.active]="currentPage === page">
+                                <button class="page-link" (click)="goToPage(page)">{{ page }}</button>
+                            </li>
+
+                            <!-- Next Button -->
+                            <li class="page-item" [class.disabled]="currentPage === totalPages">
+                                <button class="page-link" (click)="nextPage()" [disabled]="currentPage === totalPages">
+                                    Suivant
+                                    <i class="bi bi-chevron-right"></i>
+                                </button>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+
+                <!-- No Results -->
+                <div class="no-results" *ngIf="filteredProducts.length === 0 && !isLoading">
+                    <i class="bi bi-search"></i>
+                    <p>Aucun produit trouvé</p>
+                    <button class="btn btn-primary mt-3" (click)="selectedCategory = 'all'; searchQuery = ''; loadProducts()">
+                        Réinitialiser les filtres
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
