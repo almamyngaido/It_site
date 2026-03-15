@@ -5,7 +5,7 @@
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "https://YOUR_API_URL/:path*"
+      "destination": "https://intelligapi-production.up.railway.app/:path*"
     },
     {
       "source": "/(.*)",
